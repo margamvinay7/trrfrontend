@@ -1,0 +1,71 @@
+.results .details {
+  @apply flex flex-row gap-x-1 m-8;
+}
+
+.results .details input {
+  @apply w-[120px] rounded-sm;
+}
+
+.results > .input {
+  @apply flex flex-row gap-x-1;
+}
+
+.results select {
+  @apply w-40 rounded-sm text-center;
+}
+
+.resultsTable tr td:first-child,
+.resultsHead tr th:first-child {
+  @apply items-center flex justify-center    gap-x-2;
+}
+/* .resultsTable tr td:nth-child(2),
+.resultsHead tr th:nth-child(2) {
+  @apply w-1/6;
+}
+.resultsTable tr td:nth-child(3),
+.resultsHead tr th:nth-child(3) {
+  @apply w-1/6;
+} */
+
+.results table td button {
+  @apply bg-black rounded-full w-5 h-5;
+}
+
+.results table {
+  @apply border-collapse  w-[70vw];
+}
+.results .Table {
+  @apply mt-2;
+}
+
+.results table {
+  @apply text-sm;
+}
+.resultsTable tr td:first-child,
+.resultsHead tr th:first-child {
+  @apply items-center flex justify-center   gap-x-2;
+}
+
+.results .Table th {
+  @apply text-nowrap p-1   text-white  bg-admindark;
+}
+.results .Table td {
+  @apply text-nowrap p-2 text-center   text-white bg-adminlightdark;
+}
+
+@media (max-width: 500px) {
+  .results table {
+    @apply w-[95vw] border-collapse;
+  }
+  .results .Table th {
+    @apply text-nowrap  text-center   text-white;
+  }
+
+  .results select {
+    @apply w-32 rounded-sm;
+  }
+
+  .results .Table td {
+    @apply text-nowrap p-1 text-center    text-white;
+  }
+}
