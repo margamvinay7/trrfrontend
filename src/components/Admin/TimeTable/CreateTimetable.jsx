@@ -101,11 +101,14 @@ const CreateTimetable = () => {
     //   Days: Days,
     // });
     try {
-      const response = await axios.post("http://localhost:5000/timetable", {
-        year: id,
-        academicyear: academicyear,
-        Days: Days,
-      });
+      const response = await axios.post(
+        "https://trrserver.onrender.com/timetable",
+        {
+          year: id,
+          academicyear: academicyear,
+          Days: Days,
+        }
+      );
       toast.custom((t) => (
         <div
           className={`${
