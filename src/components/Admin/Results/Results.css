@@ -27,9 +27,9 @@
   @apply w-1/6;
 } */
 
-.results table td button {
-  @apply bg-black rounded-full w-5 h-5;
-}
+/* .results table td button {
+  @apply rounded-full w-5 h-5;
+} */
 
 .results table {
   @apply border-collapse  w-[70vw];
@@ -50,7 +50,7 @@
   @apply text-nowrap p-1   text-white  bg-admindark;
 }
 .results .Table td {
-  @apply text-nowrap p-2 text-center   text-white bg-adminlightdark;
+  @apply text-nowrap p-2 text-center h-11  text-white bg-adminlightdark;
 }
 
 @media (max-width: 500px) {
@@ -66,6 +66,9 @@
   }
 
   .results .Table td {
-    @apply text-nowrap p-1 text-center    text-white;
+    @apply text-nowrap  text-center h-11   text-white text-xs;
   }
+  /* .results .Table tr {
+    @apply h-96;
+  } */
 }

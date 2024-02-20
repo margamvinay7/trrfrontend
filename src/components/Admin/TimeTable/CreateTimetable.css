@@ -1,0 +1,19 @@
+.createTimetable {
+  @apply bg-blue-500 justify-center flex h-[100vh] pt-20;
+}
+
+.createTimetable .inner {
+  @apply flex  flex-col items-center sm:w-[60vw] md:w-[40vw];
+}
+
+.createTimetable .inputsection {
+  @apply flex flex-col w-[80%];
+}
+
+.createTimetable input {
+  @apply placeholder-black text-center rounded-md p-1 mt-1;
+}
+
+.createTimetable .btn div {
+  @apply bg-slate-700 p-1 text-white rounded-sm;
+}

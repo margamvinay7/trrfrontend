@@ -12,6 +12,7 @@ import Profile from "./components/Student/Profile/Profile";
 import Student from "./components/Student/Student";
 import StudentResults from "./components/Student/Results/StudentResults";
 import DateWise from "./components/Student/Attendence/DateWise";
+import CreateTimetable from "./components/Admin/TimeTable/CreateTimetable";
 
 function App() {
   const path = useLocation().pathname;
@@ -23,13 +24,13 @@ function App() {
     <>
       {route ? <Student /> : <Admin />}
       <Routes>
-        {/* <Route path="/admin" element={<Admin />} />
-        <Route path="/student" element={<Student />} /> */}
         <Route path="/" element={<Attendence />} />
         <Route path="/results" element={<Results />} />
         <Route path="/profiles" element={<StudentProfile />} />
         <Route path="/timetable" element={<TimeTable />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/createtimetable" element={<CreateTimetable />} />
+
         <Route path="/student/profile" element={<Profile />} />
         <Route
           path="/student"
