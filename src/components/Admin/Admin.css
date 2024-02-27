@@ -1,5 +1,5 @@
 .Admin .custom-heading {
-  @apply text-white font-bold w-full bg-adminlogin h-16 flex justify-center items-center text-2xl mb-10;
+  @apply text-white w-full text-[1.2rem] bg-adminlogin h-16 flex justify-center items-center  mb-10;
 }
 
 .Admin .custom-nav {
@@ -7,7 +7,7 @@
 }
 
 .Admin .custom-nav button {
-  @apply mb-1 bg-adminAttendence2 p-2 text-nowrap text-xl  text-white w-full;
+  @apply mb-1 bg-adminAttendence2 p-1 text-nowrap text-[1rem]  text-white w-full;
 }
 .Admin .custom-nav .not-active {
   @apply m-1 bg-blue-600 p-2 w-full;

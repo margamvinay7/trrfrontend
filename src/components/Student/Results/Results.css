@@ -3,7 +3,7 @@
 }
 
 .studentResults .exam {
-  @apply ms-48;
+  @apply ms-10 flex gap-x-1;
 }
 .studentResults .exam h4 {
   @apply text-white mb-1;
@@ -23,11 +23,11 @@
   @apply w-[70vw] border-collapse;
 }
 .studentResults .Table th {
-  @apply text-nowrap  text-center overflow-hidden  bg-studentdark text-white;
+  @apply text-nowrap font-normal  text-center overflow-hidden text-sm  bg-studentdark text-blue-400;
 }
 
 .studentResults .Table td {
-  @apply text-nowrap p-1 text-center overflow-hidden    text-white bg-studendtresultlight;
+  @apply text-nowrap p-1 text-center overflow-hidden text-sm    text-white bg-studendtresultlight;
 }
 
 @media (max-width: 500px) {
@@ -39,7 +39,11 @@
   }
 
   .studentResults .exam {
-    @apply ms-5;
+    @apply ms-5 flex;
+  }
+
+  .studentResults .exam select {
+    @apply rounded-sm w-48 text-center p-1;
   }
   .studentResults .Table td {
     @apply text-nowrap p-1 text-center overflow-hidden;

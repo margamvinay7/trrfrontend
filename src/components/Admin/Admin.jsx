@@ -1,9 +1,22 @@
 import React from "react";
 
 import "./Admin.css";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Link } from "react-router-dom";
+import { studentActions } from "../../redux/Student";
+import { useLocation, useNavigate } from "react-router-dom";
+
 const Admin = () => {
+  const path = useLocation().pathname;
+  console.log(path);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navbar = useSelector((state) => state.studentReducer.navbar);
+  // const user = useSelector((state) => state.studentReducer.username);
+  // if (user === "") {
+  //   navigate("/login");
+  // }
   //   const isActive = useLocation().pathname == path;
 
   //   const handlePath = (path) => {
@@ -12,26 +25,72 @@ const Admin = () => {
   //     }
   //     return false;
   //   };
+  dispatch(studentActions.navbar(path));
+  const handleNavbar = (e) => {
+    // dispatch(studentActions.navbar(path));
+  };
   return (
     <div className="Admin">
       <div className="custom-heading">
         <h1>Admin Login</h1>
       </div>
-      <div className="custom-nav">
-        <button>
-          <Link to="/">Attendence</Link>
+      <div className="custom-nav" onClick={(e) => handleNavbar(e)}>
+        <button
+          style={
+            navbar == "/attendance"
+              ? { backgroundColor: "rgba(18, 51, 77, 1)", marginBottom: 0 }
+              : { backgroundColor: "rgba(18, 51, 77, 1)" }
+          }
+        >
+          <Link to="/attendance" id="attendance">
+            Attendance
+          </Link>
         </button>
-        <button>
-          <Link to="/results">Results</Link>
+        <button
+          style={
+            navbar == "/results" || navbar == "/edit" || navbar == "/list"
+              ? { backgroundColor: "rgba(26, 79, 123, 1)", marginBottom: 0 }
+              : { backgroundColor: "rgba(26, 79, 123, 1)" }
+          }
+        >
+          <Link to="/results" id="adminresult">
+            Results
+          </Link>
         </button>
-        <button>
-          <Link to="/profiles">Student Profiles</Link>
+        <button
+          style={
+            navbar == "/profiles" || navbar == "/updateProfile"
+              ? { backgroundColor: "rgba(48, 139, 131, 1)", marginBottom: 0 }
+              : { backgroundColor: "rgba(48, 139, 131, 1)" }
+          }
+        >
+          <Link to="/profiles" id="adminprofile">
+            Student Profiles
+          </Link>
         </button>
-        <button>
-          <Link to="/timetable">Time Table</Link>
+        <button
+          style={
+            navbar == "/timetable" ||
+            navbar == "/createNew" ||
+            navbar == "/updatetimetable"
+              ? { backgroundColor: "rgba(249, 133, 60, 1)", marginBottom: 0 }
+              : { backgroundColor: "rgba(249, 133, 60, 1)" }
+          }
+        >
+          <Link to="/timetable" id="admintimetable">
+            Time Table
+          </Link>
         </button>
-        <button>
-          <Link to="/logout">Log out</Link>
+        <button
+          style={
+            navbar == "/logout"
+              ? { backgroundColor: "rgba(189, 68, 46, 1)", marginBottom: 0 }
+              : { backgroundColor: "rgba(189, 68, 46, 1)" }
+          }
+        >
+          <Link to="/logout" id="adminlogout">
+            Log out
+          </Link>
         </button>
       </div>
     </div>

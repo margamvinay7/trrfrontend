@@ -11,13 +11,13 @@
 }
 
 .results select {
-  @apply w-40 rounded-sm text-center;
+  @apply w-28 rounded-sm;
 }
 
-.resultsTable tr td:first-child,
+/* .resultsTable tr td:first-child,
 .resultsHead tr th:first-child {
-  @apply items-center flex justify-center    gap-x-2;
-}
+  @apply text-white;
+} */
 /* .resultsTable tr td:nth-child(2),
 .resultsHead tr th:nth-child(2) {
   @apply w-1/6;
@@ -38,19 +38,23 @@
   @apply mt-2;
 }
 
+.left-align {
+  text-align: left;
+}
+
 .results table {
   @apply text-sm;
 }
 .resultsTable tr td:first-child,
 .resultsHead tr th:first-child {
-  @apply items-center flex justify-center   gap-x-2;
+  @apply items-center flex  justify-start ps-4 gap-x-2;
 }
 
 .results .Table th {
-  @apply text-nowrap p-1   text-white  bg-admindark;
+  @apply text-nowrap  text-blue-400  font-normal bg-admindark;
 }
 .results .Table td {
-  @apply text-nowrap p-2 text-center h-11  text-white bg-adminlightdark;
+  @apply text-nowrap px-2 text-left h-11  text-white bg-adminlightdark;
 }
 
 @media (max-width: 500px) {
@@ -58,15 +62,15 @@
     @apply w-[95vw] border-collapse;
   }
   .results .Table th {
-    @apply text-nowrap  text-center   text-white;
+    @apply text-nowrap;
   }
 
   .results select {
-    @apply w-32 rounded-sm;
+    @apply w-28 rounded-sm;
   }
 
   .results .Table td {
-    @apply text-nowrap  text-center h-11   text-white text-xs;
+    @apply text-nowrap     text-white text-xs;
   }
   /* .results .Table tr {
     @apply h-96;

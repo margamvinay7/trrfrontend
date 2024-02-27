@@ -11,18 +11,18 @@
 }
 
 .studentAttendence .datewise input {
-  @apply text-black text-center w-56 ms-3 mt-2 rounded-sm;
+  @apply text-black text-center w-48 ms-3 mt-2 rounded-sm;
 }
 
 .studentAttendence select {
   @apply text-black rounded-sm;
 }
 .studentAttendence .monthwise {
-  @apply bg-studentmonthpurple w-[30%] me-1 text-white justify-center flex flex-col p-1;
+  @apply bg-studentmonthpurple w-[30%] me-1 text-white justify-center items-center flex flex-col p-1;
 }
 
 .attendencedatestatus .status {
-  @apply flex flex-col justify-center items-center w-full;
+  @apply flex flex-col justify-center items-start ps-20  w-full;
 }
 
 .studentAttendence .status div {
@@ -43,14 +43,14 @@ Datewise table
 }
 
 .datewisepage table {
-  @apply w-[70vw] mt-5;
+  @apply md:w-[70vw] sm:w-[90] sm:mx-2 md:mx-0 mt-5;
 }
 
 .datewisepage .Table th {
-  @apply text-nowrap p-2 px-4   text-white  bg-studentdark;
+  @apply text-nowrap  px-4 font-normal sm:text-sm md:text-base  text-white  bg-studentdark;
 }
 .datewisepage .Table td {
-  @apply text-nowrap p-2 px-4 text-center   text-white bg-studentblue2;
+  @apply text-nowrap p-2 px-4 text-center text-xs   text-white bg-studentblue2;
 }
 
 /* monthwise */
@@ -68,11 +68,27 @@ Datewise table
   @apply w-[70vw] border-collapse;
 }
 .monthwisepage .Table th {
-  @apply text-nowrap  text-center overflow-hidden bg-studentmonthblue text-white;
+  @apply text-nowrap  text-center  font-normal overflow-hidden bg-studentmonthblue text-sm  text-blue-400;
 }
 
 .monthwisepage .Table td {
-  @apply text-nowrap p-1 text-center overflow-hidden    text-white bg-studentmonthgray;
+  @apply text-nowrap p-1 text-center text-sm overflow-hidden    text-white bg-studentmonthgray;
+}
+
+.datewisepage .scroll-table tr {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 800px) {
+  .datewisepage .scroll-table {
+    border-collapse: collapse;
+    width: max-content;
+  }
+
+  .datewisepage .scroll-table th,
+  .datewisepage .scroll-table td {
+    padding: 8px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -114,7 +130,17 @@ Datewise table
   }
 
   .datewisepage .Table td {
-    @apply text-nowrap p-1 text-center ms-1 text-[8px]   text-white;
+    @apply text-nowrap p-1 text-center ms-1 text-[8px];
+  }
+
+  .datewisepage .scroll-table {
+    border-collapse: collapse;
+    width: max-content; /* Set the table width to the width of its content */
+  }
+
+  .datewisepage .scroll-table th,
+  .datewisepage .scroll-table td {
+    padding: 8px;
   }
 
   /* monthwise */
@@ -122,10 +148,10 @@ Datewise table
     @apply w-[95vw] border-collapse;
   }
   .monthwisepage .Table th {
-    @apply text-nowrap  text-center overflow-hidden text-sm  text-white;
+    @apply text-nowrap  text-center overflow-hidden text-sm text-white;
   }
 
   .monthwisepage .Table td {
-    @apply text-nowrap p-1 text-center overflow-hidden    text-white;
+    @apply text-nowrap p-1 text-center overflow-hidden;
   }
 }

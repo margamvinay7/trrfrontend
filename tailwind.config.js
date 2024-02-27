@@ -13,6 +13,12 @@ module.exports = {
         attendenceTableBody: "rgba(12, 40, 62, 1)",
         customyellow: "rgba(193, 156, 26, 1)",
 
+        logout: "rgba(189, 68, 46, 1)",
+
+        login: "rgba(25, 68, 124, 1)",
+        login1: "rgba(25, 55, 107, 1)",
+        login2: "rgba(84, 103, 138, 1)",
+        login3: "rgba(62, 114, 204, 1)",
         /*actual colors */
         adminyellow: "rgba(202, 160, 0, 1)",
         adminlogin: "rgba(25, 53, 106, 1)",

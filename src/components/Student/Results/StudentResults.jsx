@@ -1,41 +1,104 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../Results/Results.css";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { API } from "../Student";
+
 const StudentResults = () => {
+  const year = useSelector((state) => state.studentReducer.year);
+  const username = useSelector((state) => state.studentReducer.username);
+  const [years, setYears] = useState([]);
+  const [selectYear, setSelectYear] = useState("");
+  const [selectAssessment, setSelectAssessment] = useState("");
+  const [assessments, setAssessments] = useState([]);
+  const [assessmentSubjects, setAssessmentSubjects] = useState([]);
+
+  // const getSelect = async () => {
+  //   const response = await axios.get(
+  //     "http://localhost:5000/select/getAssessmentyearAndAcademicyear"
+  //   );
+  //   setYears(response?.data?.years);
+
+  //   console.log("response", response?.data?.years);
+  // };
+
+  const handleYearChange = async () => {
+    // const year = e.target.value;
+    // setSelectYear(e.target.value);
+
+    const response = await API.get(
+      `/select/getAssessmentsYearAndId/${username}/${year}`
+    );
+
+    setAssessments(response?.data);
+    console.log("ass", response.data);
+  };
+
+  const handleAssessmentChange = async (e) => {
+    setSelectAssessment(e.target.value);
+    const assessmentName = e.target.value;
+
+    const response = await API.get(
+      `/result/getAssessmentByYearAndIdAndAssesssment/${username}/${selectYear}/${assessmentName}`
+    );
+    setAssessments(response?.data);
+    setAssessmentSubjects(response?.data[0].AssessmentSubject);
+    console.log("assess res", response.data[0]);
+  };
+
+  useEffect(() => {
+    if (year) {
+      setSelectYear(year);
+      handleYearChange();
+    }
+    setSelectAssessment("");
+    setAssessmentSubjects([]);
+    // getSelect();
+  }, [year]);
   return (
-    <div className="studentResults">
+    <div className="studentResults pb-20">
       <div className="exam">
-        <h4>Select Exam</h4>
-        <select>
-          <option>I-Internal Assessment</option>
-          <option>I-Internal Assessment</option>
-          <option>I-Internal Assessment</option>
-          <option>I-Internal Assessment</option>
-        </select>
+        {/* <div>
+          <h4>Select Year</h4>
+          <select value={selectYear} onChange={handleYearChange}>
+            <option>select Year</option>
+            {years?.map((year) => (
+              <option value={year.year}>{year.year}</option>
+            ))}
+          </select>
+        </div> */}
+        <div>
+          <h4>Select Exam</h4>
+          <select value={selectAssessment} onChange={handleAssessmentChange}>
+            <option>Select Exam</option>
+            {assessments?.map((assessment) => (
+              <option value={assessment.assessment}>
+                {assessment.assessment}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="Table">
-        <div>I-Internal Assessment</div>
+        <div className="text-white">{selectAssessment}</div>
         <table className="table-auto">
           <thead>
-            <th>Department</th>
-            <th>Theory 100 Marks</th>
-            <th>Practical 100 Marks</th>
+            <th style={{ textAlign: "left", paddingLeft: "20px" }}>
+              DEPARTMENT
+            </th>
+            <th>THEORY 100 Marks</th>
+            <th>PRACTICAL 100 Marks</th>
           </thead>
           <tbody>
-            <tr>
-              <td>botony</td>
-              <td>100</td>
-              <td>100</td>
-            </tr>
-            <tr>
-              <td>botony</td>
-              <td>100</td>
-              <td>100</td>
-            </tr>
-            <tr>
-              <td>botony</td>
-              <td>100</td>
-              <td>100</td>
-            </tr>
+            {assessmentSubjects.map((subject) => (
+              <tr>
+                <td style={{ textAlign: "left", paddingLeft: "20px" }}>
+                  {subject.subject}
+                </td>
+                <td>{subject.theoryMarks ? subject.theoryMarks : "-"}</td>
+                <td>{subject.practicalMarks ? subject.practicalMarks : "-"}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

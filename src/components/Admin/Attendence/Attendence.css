@@ -27,10 +27,31 @@
 }
 
 .attendence .Table th {
-  @apply text-nowrap p-1   text-white text-lg bg-adminattendence1;
+  @apply text-nowrap p-1 font-normal  text-white text-base bg-adminattendence1;
 }
+
+.attendence table tr {
+  border: 1px solid rgba(0, 0, 0, 0.221);
+}
+
+.attendence table {
+  @apply mx-2;
+}
+
+/* .Table tr {
+  margin-bottom: 10px;
+}
+
+.Table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+} */
+
+/* .attendence .Table  tr {
+  @apply mb-1;
+} */
 .attendence .Table td {
-  @apply text-nowrap p-2 text-center text-lg  text-white bg-adminAttendence2;
+  @apply text-nowrap p-2 text-center  text-base  text-white bg-adminAttendence2;
 }
 
 @media (max-width: 500px) {
@@ -48,7 +69,22 @@
   }
 
   .attendence .Table th {
-    @apply text-nowrap text-[0.75rem] text-center bg-adminattendence1  text-white;
+    @apply text-nowrap  text-[0.75rem] text-center bg-adminattendence1;
+  }
+
+  .attendence .table-container {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scroll */
+  }
+
+  .attendence .scroll-table {
+    border-collapse: collapse;
+    width: max-content; /* Set the table width to the width of its content */
+  }
+
+  .attendence .scroll-table th,
+  .attendence .scroll-table td {
+    padding: 8px;
   }
 
   .attendence .Table {
