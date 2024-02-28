@@ -111,7 +111,7 @@ const UpdateTable = () => {
     }
     // try {
     //   await axios
-    //     .post(`https://trrserver.onrender.com/timetable/updateTimetable/${tableId}`, {
+    //     .post(`http://localhost:5000/timetable/updateTimetable/${tableId}`, {
     //       year,
     //       academicyear,
     //       Days: timetable,

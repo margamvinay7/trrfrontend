@@ -18,7 +18,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await axios.post("https://trrserver.onrender.com/login", {
+    console.log("use", username, password);
+    const response = await axios.post("http://localhost:5000/login", {
       username,
       password,
     });

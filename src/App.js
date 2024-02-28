@@ -34,7 +34,8 @@ function App() {
   const path = useLocation().pathname;
   const pathArray = path.split("/");
   const navigate = useNavigate();
-  const user = useSelector((state) => state.studentReducer.roles);
+  // const user = useSelector((state) => state.studentReducer.roles);
+  const user = "admin";
   console.log("user", user);
 
   const token = sessionStorage.getItem("token");

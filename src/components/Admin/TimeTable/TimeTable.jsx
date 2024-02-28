@@ -39,7 +39,7 @@ const TimeTable = () => {
 
   ///select/getTimetableYearAndAcademicyear
 
-  //https://trrserver.onrender.com/select/getTimetableBYyearAndAcademicyear/MBBS-I/2024-2025
+  //http://localhost:5000/select/getTimetableBYyearAndAcademicyear/MBBS-I/2024-2025
 
   const handleYearChange = async (e) => {
     setSelectYear(e.target.value);
