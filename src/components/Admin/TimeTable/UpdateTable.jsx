@@ -7,12 +7,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { API } from "../../Student/Student";
 
 const dayOrderMap = {
-  Monday: 1,
-  Tuesday: 2,
-  Wednesday: 3,
-  Thursday: 4,
-  Friday: 5,
-  Saturday: 6,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
 };
 
 const Periods = ({ periods, onUpdate }) => {
@@ -92,8 +92,9 @@ const UpdateTable = () => {
         academicyear,
         Days: timetable,
       });
+
       if (response.statusText == "OK") {
-        toast.success("File uploaded successfully");
+        toast.success("Table Edited successfully");
         console.log("File uploaded successfully");
         setTimeout(() => {
           navigate("/timetable");
@@ -110,7 +111,7 @@ const UpdateTable = () => {
     }
     // try {
     //   await axios
-    //     .post(`http://localhost:5000/timetable/updateTimetable/${tableId}`, {
+    //     .post(`https://trrserver.onrender.com/timetable/updateTimetable/${tableId}`, {
     //       year,
     //       academicyear,
     //       Days: timetable,

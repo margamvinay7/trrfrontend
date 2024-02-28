@@ -18,7 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await axios.post("http://localhost:5000/login", {
+    const response = await axios.post("https://trrserver.onrender.com/login", {
       username,
       password,
     });
@@ -66,7 +66,7 @@ const Login = () => {
             />
             <input
               type="text"
-              className=" bg-login2 w-[80%] text-sm  rounded-e-[6px] ps-2 py-1"
+              className=" bg-login2 w-[80%] text-sm  focus:outline-none a rounded-e-[6px] ps-2 py-1"
               placeholder="Username"
               onChange={(e) => setUsername(e.target.value)}
               value={username}
@@ -83,7 +83,7 @@ const Login = () => {
             />
             <input
               type="password"
-              className="bg-login2 w-[80%] text-sm   py-1 rounded-[6px] ps-2"
+              className="bg-login2 w-[80%] text-sm  focus:outline-none   py-1 rounded-[6px] ps-2"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

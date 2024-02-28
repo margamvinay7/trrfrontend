@@ -5,9 +5,11 @@ import { useSelector } from "react-redux";
 import { API } from "../Student";
 
 const Profile = () => {
+  const [per, setPer] = useState();
   const [results, setResults] = useState([]);
   const [attendence, setattendence] = useState([]);
   const student = useSelector((state) => state.studentReducer.student);
+  const [status, setStatus] = useState("");
   const getResultStatus = async () => {
     const response = await API.post(
       "/result/getResultByYearAndAcademicYearAndStudentId",
@@ -19,6 +21,11 @@ const Profile = () => {
     );
     setResults(response?.data);
     console.log("rea", response);
+    const set = response?.data?.forEach((item) => {
+      if (item.status !== "Passed") {
+        setStatus("Fail");
+      }
+    });
   };
 
   const getAttendence = async () => {
@@ -31,6 +38,15 @@ const Profile = () => {
       return item.totalSubjectsCount !== 0;
     });
     setattendence(filterData);
+    const set = filterData.forEach((item) => {
+      if (
+        Number(
+          (item.totalPresentSubjectsCount / item.totalSubjectsCount) * 100
+        ) < 75
+      ) {
+        setPer("ok");
+      }
+    });
     console.log("rer", response);
   };
   useEffect(() => {
@@ -43,7 +59,7 @@ const Profile = () => {
 
   return (
     <div
-      className="min-h-[90vh] bg-adminprofile sProfile flex flex-col pt-16
+      className="min-h-[90vh] pb-20 bg-adminprofile sProfile flex flex-col pt-16
         text-black"
     >
       <div className="  flex flex-col ps-10 sm:ps-20 md:ps-40">
@@ -103,16 +119,25 @@ const Profile = () => {
           </thead>
           <tbody>
             {results?.map((result) => (
-              <tr>
-                <td style={{ textAlign: "left", paddingLeft: "20px" }}>
-                  {result.year}
-                </td>
-                <td>{result.academicyear}</td>
-                <td>{result.status}</td>
-              </tr>
+              <>
+                <tr>
+                  <td style={{ textAlign: "left", paddingLeft: "20px" }}>
+                    {result.year}
+                  </td>
+                  <td>{result?.academicyear}</td>
+                  <td style={result.status == "Fail" ? { color: "red" } : {}}>
+                    {result.status}
+                  </td>
+                </tr>
+              </>
             ))}
           </tbody>
         </table>
+        {status == "Fail" && (
+          <div className="text-white mt-1">
+            Parents are advices to contact Deans as your child as failed
+          </div>
+        )}
       </div>
 
       <div className="results">
@@ -131,18 +156,35 @@ const Profile = () => {
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
                   {attendence.year}
                 </td>
-                <td>{results[index].academicyear}</td>
-                <td>
+                <td>{results[index]?.academicyear}</td>
+                <td
+                  style={
+                    Number(
+                      (attendence.totalPresentSubjectsCount /
+                        attendence.totalSubjectsCount) *
+                        100
+                    ) < 75
+                      ? { color: "red" }
+                      : {}
+                  }
+                >
                   {Number(
                     (attendence.totalPresentSubjectsCount /
                       attendence.totalSubjectsCount) *
                       100
                   )}
+                  %
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {per == "ok" && (
+          <div className="text-white mt-1">
+            Parents are advices to contact Deans as your child as Insufficient
+            attendance
+          </div>
+        )}
       </div>
     </div>
   );

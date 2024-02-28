@@ -14,7 +14,7 @@ const Logout = () => {
     navigate("/login");
   };
   return (
-    <div className=" w-[100vw] min-h-[70vh]  bg-slate-700/40 flex justify-center items-center">
+    <div className=" w-[100vw] min-h-[90vh]  bg-slate-700/40 flex justify-center items-center">
       <div className="w-80 h-52 rounded-2xl bg-white flex flex-col items-start ps-14  ">
         <div className="font-medium text-black mt-7 mb-5">Log Out?</div>
         <div className="text-sm text-black">Are you sure want to log out?</div>

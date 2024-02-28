@@ -32,7 +32,7 @@
 } */
 
 .results table {
-  @apply border-collapse  w-[70vw];
+  @apply border-collapse  w-[70vw] md:w-[40vw];
 }
 .results .Table {
   @apply mt-2;
@@ -54,7 +54,7 @@
   @apply text-nowrap  text-blue-400  font-normal bg-admindark;
 }
 .results .Table td {
-  @apply text-nowrap px-2 text-left h-11  text-white bg-adminlightdark;
+  @apply text-nowrap px-1 text-left h-11  text-white bg-adminlightdark;
 }
 
 @media (max-width: 500px) {

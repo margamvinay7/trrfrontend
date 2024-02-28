@@ -15,7 +15,7 @@ const StudentResults = () => {
 
   // const getSelect = async () => {
   //   const response = await axios.get(
-  //     "http://localhost:5000/select/getAssessmentyearAndAcademicyear"
+  //     "https://trrserver.onrender.com/select/getAssessmentyearAndAcademicyear"
   //   );
   //   setYears(response?.data?.years);
 
@@ -41,7 +41,7 @@ const StudentResults = () => {
     const response = await API.get(
       `/result/getAssessmentByYearAndIdAndAssesssment/${username}/${selectYear}/${assessmentName}`
     );
-    setAssessments(response?.data);
+    // setAssessments(response?.data);
     setAssessmentSubjects(response?.data[0].AssessmentSubject);
     console.log("assess res", response.data[0]);
   };

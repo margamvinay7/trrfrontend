@@ -15,7 +15,7 @@ const List = () => {
   const [searchlist, setSearchList] = useState([]);
 
   const getAssessmentList = async () => {
-    // http://localhost:5000/result/getAssessmentList/Mbbs-1/2024-2030/internal-15
+    // https://trrserver.onrender.com/result/getAssessmentList/Mbbs-1/2024-2030/internal-15
     const response = await API.get(
       `/result/getAssessmentList/${data.year}/${data.academicyear}/${data.assessment}`
     );
@@ -58,13 +58,18 @@ const List = () => {
           }}
         />
       </div>
+      <div className="m-5 text-white text-lg">{data.assessment}</div>
       <div className="Table ms-1">
         <table className=" table-auto">
           <thead>
             <tr>
-              <th>Roll No</th>
-              <th>Student Name</th>
-              <th>Assessment</th>
+              <th style={{ textAlign: "left", paddingLeft: "30px" }}>
+                Roll No
+              </th>
+              <th style={{ textAlign: "left", paddingLeft: "30px" }}>
+                Student Name
+              </th>
+
               {/* {count?.map((subject) => (
                 <th>{`${subject.subject} TM PM`}</th>
               ))} */}
@@ -74,20 +79,24 @@ const List = () => {
           <tbody>
             {searchlist?.map((item) => (
               <tr>
-                <td>{item.studentId}</td>
-                <td></td>
-                <td></td>
+                <td style={{ textAlign: "left", paddingLeft: "30px" }}>
+                  {item.studentId}
+                </td>
+                <td style={{ textAlign: "left", paddingLeft: "30px" }}>
+                  {item?.studentName}
+                </td>
+
                 {/* {item?.AssessmentSubject?.map((subject) => (
                   <td>{`${subject.subject} ${subject.theoryMarks} ${subject.practicalMarks}`}</td>
                 ))} */}
-                <td>
+                <td style={{ paddingLeft: "20px" }}>
                   <button>
                     <Link
                       to="/edit"
                       state={{
-                        id: `${item.id}`,
-                        name: `${item.fullName}`,
-                        studentId: `${item.studentId}`,
+                        id: `${item?.id}`,
+                        name: `${item?.studentName}`,
+                        studentId: `${item?.studentId}`,
                       }}
                     >
                       <CiEdit

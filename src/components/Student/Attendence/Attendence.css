@@ -43,7 +43,7 @@ Datewise table
 }
 
 .datewisepage table {
-  @apply md:w-[70vw] sm:w-[90] sm:mx-2 md:mx-0 mt-5;
+  @apply md:w-[40vw] sm:w-[90] sm:mx-2 md:mx-0 mt-5;
 }
 
 .datewisepage .Table th {
@@ -65,7 +65,7 @@ Datewise table
 }
 
 .monthwisepage table {
-  @apply w-[70vw] border-collapse;
+  @apply w-[70vw] md:w-[40vw] border-collapse;
 }
 .monthwisepage .Table th {
   @apply text-nowrap  text-center  font-normal overflow-hidden bg-studentmonthblue text-sm  text-blue-400;

@@ -72,7 +72,7 @@ const Timetable = () => {
       }, 1500);
     }
     // try {
-    //   const response = await axios.post("http://localhost:5000/timetable", {
+    //   const response = await axios.post("https://trrserver.onrender.com/timetable", {
     //     year: year,
     //     academicyear: academicyear,
     //     Days: newtable,

@@ -39,7 +39,7 @@ const TimeTable = () => {
 
   ///select/getTimetableYearAndAcademicyear
 
-  //http://localhost:5000/select/getTimetableBYyearAndAcademicyear/MBBS-I/2024-2025
+  //https://trrserver.onrender.com/select/getTimetableBYyearAndAcademicyear/MBBS-I/2024-2025
 
   const handleYearChange = async (e) => {
     setSelectYear(e.target.value);
@@ -81,12 +81,12 @@ const TimeTable = () => {
   };
 
   const week = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
   ];
 
   const sortedTimetable = timetable?.sort(

@@ -6,7 +6,7 @@
 }
 
 .sProfile table {
-  @apply w-[70vw] border-collapse;
+  @apply w-[70vw] md:w-[40vw] border-collapse;
 }
 .sProfile .results th {
   @apply text-nowrap  text-left font-normal ps-4 text-blue-300  bg-adminprofileblue;

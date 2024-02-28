@@ -20,7 +20,7 @@
 }
 
 .studentResults table {
-  @apply w-[70vw] border-collapse;
+  @apply w-[70vw] md:w-[40vw] border-collapse;
 }
 .studentResults .Table th {
   @apply text-nowrap font-normal  text-center overflow-hidden text-sm  bg-studentdark text-blue-400;

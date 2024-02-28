@@ -122,6 +122,29 @@ const Results = () => {
     setFile(null);
   };
 
+  const handleDelete = async (assessment) => {
+    const year = selectYear;
+    const academicyear = selectAcademic;
+    try {
+      const response = await API.post("/result/deleteAssessment", {
+        year: year,
+        academicyear: academicyear,
+        assessment: assessment,
+      });
+      if (response.statusText == "OK") {
+        toast.success("Assessment Deleted");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  };
+
   useEffect(() => {
     getSelect();
   }, []);
@@ -180,7 +203,9 @@ const Results = () => {
                 <td className="left-align">{assessment}</td>
                 <td>
                   {" "}
-                  <button>
+                  <button
+                  // onClick={handleChangeAssessment(assessment)}
+                  >
                     <CiEdit
                       style={{
                         color: "white",

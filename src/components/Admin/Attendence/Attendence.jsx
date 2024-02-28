@@ -12,25 +12,26 @@ const Attendence = () => {
   const [timetable, setTimetable] = useState([]);
   const [date, setDate] = useState(new Date());
   const [periods, setPeriods] = useState([]);
+  const [year, setYear] = useState([]);
+  const [academicyear, setAcademicyear] = useState([]);
 
   const dayNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "SUNDAY",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
   ];
   const day = new Date().getDay();
   console.log("day", day);
   const [today, setToday] = useState(dayNames[day]);
-  var year;
-  var academicyear;
+
   const handleYearChange = async (e) => {
     setSelectYear(e.target.value);
-    year = e.target.value;
-
+    const year = e.target.value;
+    setYear(year);
     await API.get(`/select/getTimetableByYear/${year}`).then(
       async (response) => {
         console.log(
@@ -40,7 +41,8 @@ const Attendence = () => {
         setPeriods(
           response?.data[0]?.Days.filter((day) => day.day == today)[0]?.Periods
         );
-        academicyear = response?.data[0]?.academicyear;
+        const academicyear = response?.data[0]?.academicyear;
+        setAcademicyear(academicyear);
         console.log("it is response", response?.data[0]?.academicyear);
         const students = await API.get(
           `/select/getStudentByYearAndAcademicyear/${year}/${academicyear}`
@@ -53,7 +55,7 @@ const Attendence = () => {
   const getSelect = async () => {
     const response = await API.get("/select/getTimetableYear");
     setYearValue(response?.data?.years);
-
+    console.log("yer", response?.data?.years);
     setSelectYear(response?.data?.years[0]);
   };
 
@@ -107,6 +109,13 @@ const Attendence = () => {
   const handleSaveAttendence = async () => {
     try {
       const response = await API.post("/attendence", attendence);
+      console.log("res", response);
+      if (response.statusText == "Already Reported") {
+        toast.error(`${response?.data?.message}`);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
       if (response.statusText == "OK") {
         toast.success("Attendence Saved");
         console.log("File uploaded successfully");
@@ -186,7 +195,7 @@ const Attendence = () => {
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
                   {student.id}
                 </td>
-                {periods.map((period) => (
+                {periods?.map((period) => (
                   <td>
                     <input
                       type="checkbox"
