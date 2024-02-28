@@ -58,7 +58,7 @@ const StudentProfile = () => {
 
     try {
       if (file !== null) {
-        const response = await API.post("", formData).then((res) => {
+        const response = await API.post("/", formData).then((res) => {
           // toast.success("File uploaded successfully");
           if (res.statusText == "OK") {
             toast.success("File uploaded successfully");

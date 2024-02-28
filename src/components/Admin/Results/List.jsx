@@ -15,7 +15,7 @@ const List = () => {
   const [searchlist, setSearchList] = useState([]);
 
   const getAssessmentList = async () => {
-    // http://localhost:5000/result/getAssessmentList/Mbbs-1/2024-2030/internal-15
+    // https://trrserver.onrender.com/result/getAssessmentList/Mbbs-1/2024-2030/internal-15
     const response = await API.get(
       `/result/getAssessmentList/${data.year}/${data.academicyear}/${data.assessment}`
     );

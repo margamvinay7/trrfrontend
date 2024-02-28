@@ -81,6 +81,7 @@ const Results = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("excelFile", file);
+    console.log("here");
 
     try {
       let response;

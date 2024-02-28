@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 import axios from "axios";
 
-export const API = axios.create({ baseURL: "http://localhost:5000" });
+export const API = axios.create({ baseURL: "https://trrserver.onrender.com" });
 API.interceptors.request.use((req) => {
   if (sessionStorage.getItem("token")) {
     req.headers.Authorization = `Bearer ${sessionStorage.getItem("token")}`;
