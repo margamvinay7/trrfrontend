@@ -15,18 +15,19 @@ const List = () => {
   const [searchlist, setSearchList] = useState([]);
 
   const getAssessmentList = async () => {
-    // https://trrserver.onrender.com/result/getAssessmentList/Mbbs-1/2024-2030/internal-15
+    // http://localhost:5000/result/getAssessmentList/Mbbs-1/2024-2030/internal-15
     const response = await API.get(
-      `/result/getAssessmentList/${data.year}/${data.academicyear}/${data.assessment}`
+      `/result/getAssessmentList?year=${data.year}&academicyear=${data.academicyear}&assessment=${data.assessment}`
     );
     setList(response.data);
+    console.log(response.data);
     setSearchList(response.data);
     // setCount(response?.data[0]?.AssessmentSubject);
-    console.log(
-      "response data",
-      response.data,
-      response?.data[0]?.AssessmentSubject
-    );
+    // console.log(
+    //   "response data",
+    //   response.data,
+    //   response?.data[0]?.AssessmentSubject
+    // );
   };
 
   const handleSearch = (e) => {

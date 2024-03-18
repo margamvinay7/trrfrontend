@@ -5,6 +5,7 @@ import axios from "axios";
 import { API } from "../../Student/Student";
 const UpdateProfile = () => {
   const navigate = useNavigate();
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [student, setStudent] = useState({
     id: "",
     fullName: "",
@@ -17,73 +18,24 @@ const UpdateProfile = () => {
     address: "",
   });
 
-  //   const imageToBinary = (file) => {
-  //     return new Promise((resolve, reject) => {
-  //       const reader = new FileReader();
-
-  //       reader.onload = () => {
-  //         const binaryString = reader.result;
-  //         const binary = new Uint8Array(binaryString);
-  //         resolve(binary);
-  //       };
-
-  //       reader.onerror = (error) => {
-  //         reject(error);
-  //       };
-
-  //       reader.readAsArrayBuffer(file);
-  //     });
-  //   };
-
-  const imageToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
-
   const [image, setImage] = useState(null);
   const getStudent = async () => {
-    const response = await API.get(`/getStudentById/${state.id}`).then(
-      (res) => {
-        setStudent(res?.data);
-      }
-    );
+    const response = await API.get(
+      `/student/getStudentById?id=${state.id}`
+    ).then((res) => {
+      setStudent(res?.data);
+    });
   };
   const { state } = useLocation();
 
   const handleInputChange = async (event) => {
+    console.log("in inpyt");
     const { name, value } = event.target;
-    if (name == "image") {
-      //   setStudent((prevStudent) => ({
-      //     ...prevStudent,
-      //     [name]: event.target.files[0],
-      //   }));
-      const file = event.target.files[0];
-      try {
-        const base64Image = await imageToBase64(file);
-        setImage(base64Image);
-        console.log(base64Image); // Base64 image data
-      } catch (error) {
-        console.error("Error converting image to base64:", error);
-      }
-      //   console.log(event.target.files[0]);
-      //   setImage(event.target.files[0]);
-    } else {
-      setStudent((prevStudent) => ({
-        ...prevStudent,
-        [name]: value,
-      }));
-    }
+
+    setStudent((prevStudent) => ({
+      ...prevStudent,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -103,8 +55,8 @@ const UpdateProfile = () => {
       formData.append("address", student.address);
 
       // Send updated student data to the server
-      const response = await API.put(
-        `/updateStudent`,
+      const response = await API.post(
+        `/student/updateStudent`,
 
         formData,
 
@@ -114,12 +66,16 @@ const UpdateProfile = () => {
           },
         }
       );
-      console.log("re", response);
-      toast.success("Student updated successfully!");
-      console.log("Student updated successfully!");
-      setTimeout(() => {
-        navigate("/profiles");
-      }, 1000);
+      if (response.status == 200) {
+        console.log("re", response);
+        toast.success("Student updated successfully!");
+        console.log("Student updated successfully!");
+        setTimeout(() => {
+          navigate("/profiles");
+        }, 1000);
+      } else if (response.status == 204) {
+        toast.error("Image must be lessthan 500X500");
+      }
     } catch (error) {
       toast.error("Failed to Update Student");
       console.error("Error updating student:", error);
@@ -146,8 +102,7 @@ const UpdateProfile = () => {
         >
           <div className=" flex gap-x-2">
             <label>
-              Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              :&nbsp;
+              Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
             </label>
             <input
               type="text"
@@ -173,8 +128,7 @@ const UpdateProfile = () => {
 
           <div className=" flex gap-x-2">
             <label>
-              Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              &nbsp;&nbsp;&nbsp; :&nbsp;
+              Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
             </label>
             <input
               className=" p-1 rounded-sm"
@@ -185,7 +139,7 @@ const UpdateProfile = () => {
             />
           </div>
           <div className=" flex gap-x-2">
-            <label>Academic Year &nbsp;:&nbsp;</label>
+            <label>Academic Year&nbsp;&nbsp;:&nbsp;</label>
             <input
               className=" p-1 rounded-sm"
               type="text"
@@ -196,8 +150,7 @@ const UpdateProfile = () => {
           </div>
           <div className=" flex gap-x-2">
             <label>
-              Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              :&nbsp;
+              Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
             </label>
             <input
               className=" p-1 rounded-sm"
@@ -221,7 +174,7 @@ const UpdateProfile = () => {
           </div>
           <div className=" flex gap-x-2">
             <label>
-              Gender&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+              Gender&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
             </label>
             <input
               className=" p-1 rounded-sm"
@@ -233,7 +186,7 @@ const UpdateProfile = () => {
           </div>
           <div className=" flex gap-x-2">
             <label>
-              Joining Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+              Joining Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
             </label>
             <input
               className=" p-1 rounded-sm"
@@ -245,10 +198,10 @@ const UpdateProfile = () => {
           </div>
           <div className=" flex gap-x-2">
             <label>
-              Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+              Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
             </label>
             <input
-              className=" p-1 w-96 rounded-sm"
+              className=" p-1 sm:w-96 w-48 rounded-sm"
               type="text"
               name="address"
               value={student.address}
@@ -261,7 +214,7 @@ const UpdateProfile = () => {
             </label>
             <label
               htmlFor="studentimage"
-              className=" bg-slate-400 p-1 rounded-sm w-48 text-center hover:bg-slate-600"
+              className=" bg-slate-100 p-1 rounded-sm w-48 text-center hover:bg-slate-400"
             >
               {" "}
               Upload Photo
@@ -272,7 +225,7 @@ const UpdateProfile = () => {
               accept="image/*"
               className=" absolute -top-[1000px] p-1 rounded-sm"
               name="image"
-              onChange={handleInputChange}
+              onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
 

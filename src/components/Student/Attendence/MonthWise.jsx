@@ -29,8 +29,9 @@ const MonthWise = ({ month }) => {
   console.log("month", monthnumber);
   const year = month?.split("-")[0];
   const getAttendence = async () => {
+    //9747674821
     const response = await API.get(
-      `/attendence/getAttendenceByIdAndMonth/${username}/${monthnumber}/${year}`
+      `/attendance/getAttendanceByIdAndMonth?id=${username}&month=${monthnumber}&year=${year}`
     );
     setSubjects(response.data[0]);
     setPresent(response.data[1]);

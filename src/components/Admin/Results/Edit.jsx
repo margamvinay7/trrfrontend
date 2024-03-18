@@ -13,22 +13,21 @@ const Edit = () => {
   const [assessment, setAssessment] = useState({});
   console.log("state", state.id);
   const getAssessment = async () => {
-    const response = await API.get(`/result/getAssessmentById/${state.id}`);
-    setAssessment(response?.data);
-    setSubjects(response?.data?.AssessmentSubject);
+    const response = await API.get(`/result/getAssessmentById?id=${state.id}`);
+    // setAssessment(response?.data);
+    // setSubjects(response?.data?.AssessmentSubject);
+    setSubjects(response?.data);
     console.log("res edit", response);
   };
 
   const handleSend = async () => {
     console.log(subjects);
-    assessment.AssessmentSubject = subjects;
+    // assessment.AssessmentSubject = subjects;
     try {
       let response;
 
-      response = await API.patch(`/result/updateAssessment/${id}`, {
-        AssessmentSubject: subjects,
-      });
-      if (response.statusText == "OK") {
+      response = await API.post(`/result/updateAssessment?id=${id}`, subjects);
+      if (response.status == 200) {
         toast.success("Assessment Edited");
         console.log("File uploaded successfully");
         setTimeout(() => {
@@ -81,7 +80,7 @@ const Edit = () => {
 
       <div>
         <hr />
-        {subjects.map((item) => (
+        {subjects?.map((item) => (
           <div className="my-5">
             <div className="mb-2">
               <label htmlFor="subject" className="me-4 text-base text-white">

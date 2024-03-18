@@ -44,7 +44,22 @@
   }
 
   .profiles table {
-    @apply border-collapse w-[95vw];
+    @apply border-collapse w-[95vw]  mx-2;
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .profiles .scroll-table {
+    border-collapse: collapse;
+    width: max-content;
+  }
+
+  .profiles .scroll-table th,
+  .profiles .scroll-table td {
+    padding: 4px;
   }
 
   .profiles select {

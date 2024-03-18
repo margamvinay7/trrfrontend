@@ -28,6 +28,7 @@ import UpdateProfile from "./components/Admin/StudentProfiles/UpdateProfile";
 import { useSelector, useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { studentActions } from "./redux/Student";
+import Promoto from "./components/Admin/Results/Promoto";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ function App() {
   const pathArray = path.split("/");
   const navigate = useNavigate();
   const user = useSelector((state) => state.studentReducer.roles);
-  // const user = "admin";
+  // const user = "student";
   console.log("user", user);
 
   const token = sessionStorage.getItem("token");
@@ -78,7 +79,7 @@ function App() {
             <Route path="/results" element={<Results />} />
             <Route path="/profiles" element={<StudentProfile />} />
             <Route path="/timetable" element={<TimeTable />} />
-
+            <Route path="/promote" element={<Promoto />} />
             <Route path="/createNew" element={<CreateNew />} />
             <Route path="/list" element={<List />} />
             <Route path="/edit" element={<Edit />} />

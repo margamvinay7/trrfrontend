@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { API } from "../../Student/Student";
+import { FiSearch } from "react-icons/fi";
 
 const StudentProfile = () => {
   const [file, setFile] = useState(null);
@@ -14,27 +15,66 @@ const StudentProfile = () => {
   const [selectAcademic, setSelectAcademic] = useState("");
   const [selectYear, setSelectYear] = useState("");
   const [students, setStudents] = useState([]);
+  const [searchlist, setSearchList] = useState([]);
 
   console.log("studentprofile");
   const handleYearChange = async (e) => {
     setSelectYear(e.target.value);
     const year = e.target.value;
     const academicyear = selectAcademic;
-    const response = await API.get(
-      `/select/getStudentByYearAndAcademicyear/${year}/${academicyear}`
-    );
-    setStudents(response?.data);
-    console.log(e.target.value);
+    // const response = await API.get(
+    //   `/student/getStudentByYearAndAcademicYear?year=MBBS-I&academicyear=2024-2025`
+    // );
+    let response;
+
+    if (year && academicyear) {
+      console.log("res1", year, academicyear);
+      response = await API.get(
+        `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
+      );
+      setStudents(response?.data);
+      setSearchList(response?.data);
+      console.log("stude", response);
+    }
+
+    // setStudents(response?.data);
+    // console.log("stude", response);
   };
   const handleAcademicChange = async (e) => {
     const year = selectYear;
     const academicyear = e.target.value;
     setSelectAcademic(e.target.value);
-    const response = await API.get(
-      `/select/getStudentByYearAndAcademicyear/${year}/${academicyear}`
-    );
-    setStudents(response?.data);
-    console.log(e.target.value);
+    // const response = await API.get(
+    //   `/student/getStudentByYearAndAcademicYear?year=MBBS-I&academicyear=2024-2025`
+    // );
+    let response;
+
+    if (year && academicyear) {
+      console.log("res1", year, academicyear);
+      response = await API.get(
+        `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
+      );
+      setStudents(response?.data);
+      setSearchList(response?.data);
+      console.log("stude", response);
+    }
+
+    // setStudents(response?.data);
+    // console.log("stude", response);
+  };
+
+  const handleSearch = (e) => {
+    const serachResults = students.filter((item) => {
+      return (
+        item.id.includes(e.target.value) ||
+        item.fullName.includes(e.target.value) ||
+        item.email.includes(e.target.value) ||
+        item.mobile.includes(e.target.value) ||
+        item.joiningyear.includes(e.target.value) ||
+        item.academicyear.includes(e.target.value)
+      );
+    });
+    setSearchList(serachResults);
   };
 
   const handleFileChange = (e) => {
@@ -42,12 +82,12 @@ const StudentProfile = () => {
   };
 
   const getSelect = async () => {
-    const response = await API.get("/select");
+    const response = await API.get("/student/getYearAndAcademicYear");
     setYearValue(response?.data?.years);
     setAcademicYearValue(response?.data?.academicyears);
-    setSelectAcademic(response?.data?.academicyears[0]);
-    setSelectYear(response?.data?.years[0]);
-    console.log("response", response?.data?.years);
+    // setSelectAcademic(response?.data?.academicyears[0]);
+    // setSelectYear(response?.data?.years[0]);
+    console.log("response", response?.data);
   };
 
   const handleSubmit = async (e) => {
@@ -58,11 +98,14 @@ const StudentProfile = () => {
 
     try {
       if (file !== null) {
-        const response = await API.post("/", formData).then((res) => {
+        const response = await API.post(
+          "/student/createStudent",
+          formData
+        ).then((res) => {
           // toast.success("File uploaded successfully");
-          if (res.statusText == "OK") {
+          if (res.status == 200) {
             toast.success("File uploaded successfully");
-            console.log("File uploaded successfully");
+            console.log("File uploaded successfully", res);
 
             setTimeout(() => {
               window.location.reload();
@@ -89,6 +132,34 @@ const StudentProfile = () => {
     }
   };
 
+  const sortMBBSValues = (a, b) => {
+    // Extract the alphabetic part from the strings
+    const getAlphabeticPart = (str) => str.split("-")[1];
+
+    // Define a mapping for the alphabetic values
+    const alphabeticValues = { I: 1, II: 2, III: 3, IV: 4 };
+
+    // Get the alphabetic value for each string
+    const aValue = alphabeticValues[getAlphabeticPart(a)];
+    const bValue = alphabeticValues[getAlphabeticPart(b)];
+
+    // Sort based on alphabetic values
+    return aValue - bValue;
+  };
+  const sortedYears = yearValue.sort(sortMBBSValues);
+
+  const compareAcademicYears = (a, b) => {
+    // Get the last year from the academic year string
+    const getLastYear = (academicYear) => {
+      return parseInt(academicYear.split("-")[1]);
+    };
+
+    // Sort by descending order of last year
+    return getLastYear(b) - getLastYear(a);
+  };
+
+  const sortedAcademicYears = academicyearValue.sort(compareAcademicYears);
+
   const handleSelectClick = () => {
     // Clear the file input when the "select" button is clicked
     setFile(null);
@@ -102,18 +173,16 @@ const StudentProfile = () => {
     <div className="bg-adminprofile min-h-[90vh] profiles pb-20  min-w-[80%] flex  mx-1 flex-col items-center pt-7">
       <h1 className="mb-3 font-medium ">Student Profiles</h1>
       <div className="input">
-        <select value={selectAcademic} onChange={handleAcademicChange}>
+        <select onChange={handleAcademicChange}>
           <option>Select</option>
-          {academicyearValue?.map((academicyear) => (
-            <option value={academicyear.academicyear}>
-              {academicyear.academicyear}
-            </option>
+          {sortedAcademicYears?.map((academicyear) => (
+            <option value={academicyear}>{academicyear}</option>
           ))}
         </select>
-        <select value={selectYear} onChange={handleYearChange}>
+        <select onChange={handleYearChange}>
           <option>Select</option>
-          {yearValue?.map((year) => (
-            <option value={year.year}>{year.year}</option>
+          {sortedYears?.map((year) => (
+            <option value={year}>{year}</option>
           ))}
         </select>
         <Toaster />
@@ -136,9 +205,24 @@ const StudentProfile = () => {
             />
           </form>
         </div>
+        <div className="flex items-center bg-white pe-2 rounded-md">
+          <input
+            className="w-[20vw] rounded-md text-black ps-2  placeholder-slate-600"
+            onChange={handleSearch}
+            placeholder="Search Student"
+          />
+          <FiSearch
+            style={{
+              color: "black",
+
+              height: 25,
+              width: 25,
+            }}
+          />
+        </div>
       </div>
-      <div className="Table">
-        <table className="table-auto">
+      <div className="Table table-container ">
+        <table className="table-auto scroll-table">
           <thead>
             <tr>
               <th>Roll No.</th>
@@ -151,7 +235,7 @@ const StudentProfile = () => {
             </tr>
           </thead>
           <tbody>
-            {students.map((student) => (
+            {searchlist?.map((student) => (
               <tr>
                 <td>{student.id} </td>
                 <td>{student.fullName == null ? "-" : student.fullName}</td>

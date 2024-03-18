@@ -39,7 +39,7 @@ const TimeTable = () => {
 
   ///select/getTimetableYearAndAcademicyear
 
-  //https://trrserver.onrender.com/select/getTimetableBYyearAndAcademicyear/MBBS-I/2024-2025
+  //http://localhost:5000/select/getTimetableBYyearAndAcademicyear/MBBS-I/2024-2025
 
   const handleYearChange = async (e) => {
     setSelectYear(e.target.value);
@@ -48,13 +48,15 @@ const TimeTable = () => {
     setYear(year);
     setAcad(academicyear);
 
-    const response = await API.get(
-      `/select/getTimetableBYyearAndAcademicyear/${year}/${academicyear}`
-    );
-    setTimetable(response?.data[0]?.Days);
-    setId(response?.data[0]?.id);
-    console.log("res", response?.data);
-    console.log(e.target.value);
+    if (year && academicyear) {
+      const response = await API.get(
+        `/timetable/getTimetableBYyearAndAcademicyear?year=${year}&academicyear=${academicyear}`
+      );
+      setTimetable(response?.data?.Days);
+      setId(response?.data?.id);
+      console.log("res", response?.data?.Days);
+      console.log(e.target.value);
+    }
   };
 
   const handleAcademicChange = async (e) => {
@@ -62,20 +64,25 @@ const TimeTable = () => {
     const academicyear = e.target.value;
     setAcad(academicyear);
     setSelectAcademic(academicyear);
-    const response = await API.get(
-      `/select/getTimetableBYyearAndAcademicyear/${year}/${academicyear}`
-    );
-    setId(response?.data[0]?.id);
-    setTimetable(response?.data[0]?.Days);
-    console.log("res", response?.data);
+
+    if (year && academicyear) {
+      const response = await API.get(
+        `/timetable/getTimetableBYyearAndAcademicyear?year=${year}&academicyear=${academicyear}`
+      );
+      setId(response?.data?.id);
+      setTimetable(response?.data?.Days);
+      console.log("res", response?.data?.Days);
+    }
   };
 
   const getSelect = async () => {
-    const response = await API.get("/select/getTimetableYearAndAcademicyear");
+    const response = await API.get(
+      "/timetable/getTimetableYearAndAcademicyear"
+    );
     setYearValue(response?.data?.years);
     setAcademicYearValue(response?.data?.academicyears);
-    setSelectAcademic(response?.data?.academicyears[0]);
-    setSelectYear(response?.data?.years[0]);
+    // setSelectAcademic(response?.data?.academicyears[0]);
+    // setSelectYear(response?.data?.years[0]);
     console.log("response data", response?.data);
     console.log("response", response?.data?.years);
   };
@@ -93,6 +100,34 @@ const TimeTable = () => {
     (a, b) => dayOrderMap[a.day] - dayOrderMap[b.day]
   );
 
+  const sortMBBSValues = (a, b) => {
+    // Extract the alphabetic part from the strings
+    const getAlphabeticPart = (str) => str.split("-")[1];
+
+    // Define a mapping for the alphabetic values
+    const alphabeticValues = { I: 1, II: 2, III: 3, IV: 4 };
+
+    // Get the alphabetic value for each string
+    const aValue = alphabeticValues[getAlphabeticPart(a)];
+    const bValue = alphabeticValues[getAlphabeticPart(b)];
+
+    // Sort based on alphabetic values
+    return aValue - bValue;
+  };
+  const sortedYears = yearValue.sort(sortMBBSValues);
+
+  const compareAcademicYears = (a, b) => {
+    // Get the last year from the academic year string
+    const getLastYear = (academicYear) => {
+      return parseInt(academicYear.split("-")[1]);
+    };
+
+    // Sort by descending order of last year
+    return getLastYear(b) - getLastYear(a);
+  };
+
+  const sortedAcademicYears = academicyearValue.sort(compareAcademicYears);
+
   useEffect(() => {
     getSelect();
   }, []);
@@ -101,18 +136,16 @@ const TimeTable = () => {
     <div className="bg-admintimeorange min-h-[90vh] timetable  min-w-[80%] flex  mx-1 flex-col items-center pt-7">
       <h1 className="mb-3 font-semibold">Time Table</h1>
       <div className="input">
-        <select value={selectAcademic} onChange={handleAcademicChange}>
+        <select onChange={handleAcademicChange}>
           <option>select</option>
-          {academicyearValue?.map((academicyear) => (
-            <option value={academicyear.academicyear}>
-              {academicyear.academicyear}
-            </option>
+          {sortedAcademicYears?.map((academicyear) => (
+            <option value={academicyear}>{academicyear}</option>
           ))}
         </select>
-        <select value={selectYear} onChange={handleYearChange}>
+        <select onChange={handleYearChange}>
           <option>select</option>
-          {yearValue?.map((year) => (
-            <option value={year.year}>{year.year}</option>
+          {sortedYears?.map((year) => (
+            <option value={year}>{year}</option>
           ))}
         </select>
         <button>

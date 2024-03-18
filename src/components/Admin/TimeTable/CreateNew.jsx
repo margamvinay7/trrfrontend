@@ -46,16 +46,18 @@ const Timetable = () => {
     try {
       let response;
       if (year !== null && academicyear !== null) {
-        response = await API.post("/timetable", {
+        response = await API.post("/timetable/createTimetable/", {
           year: year,
           academicyear: academicyear,
           Days: newtable,
         });
+        console.log("ret", response);
       } else {
         // toast.error("Enter the Year and Academic Year fields");
         throw new Error("Enter the year and academic year fields");
       }
-      if (response.statusText == "OK") {
+      if (response.status == 200) {
+        console.log("ret", response);
         toast.success("Table Created");
         console.log("File uploaded successfully");
         setTimeout(() => {
@@ -72,7 +74,7 @@ const Timetable = () => {
       }, 1500);
     }
     // try {
-    //   const response = await axios.post("https://trrserver.onrender.com/timetable", {
+    //   const response = await axios.post("http://localhost:5000/timetable", {
     //     year: year,
     //     academicyear: academicyear,
     //     Days: newtable,

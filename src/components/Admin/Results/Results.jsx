@@ -5,7 +5,7 @@ import { CiEdit } from "react-icons/ci";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { editActions } from "../../../redux/Edit";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 // import { FaUpload } from "react-icons/fa";
 import axios from "axios";
@@ -22,6 +22,9 @@ const Results = () => {
   const [selectYear, setSelectYear] = useState("");
   const [assessments, setAssessments] = useState([]);
   const [newexam, setNewexam] = useState("");
+  const [current, setCurrent] = useState("");
+  const [currentAssessment, setCurrentAssessment] = useState("");
+  const [editedName, setEditedName] = useState("");
 
   const handleFileChange = (e) => {
     e.preventDefault();
@@ -34,67 +37,169 @@ const Results = () => {
     setSelectYear(e.target.value);
     const year = e.target.value;
     const academicyear = selectAcademic;
-    const response = await API.get(
-      `/select/getAssessment/${year}/${academicyear}`
-    );
-    setAssessments(response?.data);
-    console.log(response?.data);
-    console.log(e.target.value);
+    if (year !== null && academicyear !== null) {
+      const response = await API.get(
+        `/result/getAssessments?year=${year}&academicyear=${academicyear}`
+      );
+      setAssessments(response?.data);
+      console.log(response?.data);
+      console.log(e.target.value);
+    }
   };
   const handleAcademicChange = async (e) => {
     const year = selectYear;
     const academicyear = e.target.value;
     setSelectAcademic(e.target.value);
     const response = await API.get(
-      `/select/getAssessment/${year}/${academicyear}`
+      `/result/getAssessments?year=${year}&academicyear=${academicyear}`
     );
     setAssessments(response?.data);
     console.log(response?.data);
     console.log(e.target.value);
   };
-  const uploaded = async () => {
-    const year = selectYear;
-    const academicyear = selectAcademic;
 
-    const response = await API.get(
-      `/select/getAssessment/${year}/${academicyear}`
-    );
-    setAssessments(response?.data);
-    console.log(response?.data);
-  };
+  // const uploaded = async () => {
+  //   const year = selectYear;
+  //   const academicyear = selectAcademic;
+
+  //   const response = await API.get(
+  //     `/result/getAssessments?year=${year}&academicyear=${academicyear}`
+  //   );
+  //   setAssessments(response?.data);
+  //   console.log(response?.data);
+  // };
 
   const getSelect = async () => {
-    const response = await API.get("/select/getAssessmentyearAndAcademicyear");
+    const response = await API.get("/result/getAssessmentyearAndAcademicyear");
     setYearValue(response?.data?.years);
     setAcademicYearValue(response?.data?.academicyears);
-    setSelectAcademic(response?.data?.academicyears[0]);
-    setSelectYear(response?.data?.years[0]);
+    // setSelectAcademic(response?.data?.academicyears);
+    // setSelectYear(response?.data?.years);
     console.log("response", response?.data?.years);
   };
 
-  const handleAddExam = () => {
-    setAssessments([...assessments, newexam]);
-    setNewexam("");
+  // const handleAddExam = (nameChange = null) => {
+  //   if (nameChange !== null) {
+  //     console.log("here");
+  //     const newass = assessments.forEach((assessment) => {
+  //       if (assessment.name !== editedName) {
+  //         return assessment;
+  //       }
+  //     });
+  //     if (newass?.length > 1) {
+  //       assessments.forEach((assessment) => {
+  //         if (assessment.name == editedName) {
+  //           setAssessments([
+  //             ...newass,
+  //             { name: newexam, assessment: "assessment" },
+  //           ]);
+  //         }
+  //       });
+  //     } else if (newass?.length == 1) {
+  //       assessments.forEach((assessment) => {
+  //         if (assessment.name == editedName) {
+  //           setAssessments([{ name: newexam, assessment: "assessment" }]);
+  //         }
+  //       });
+  //     }
+  //   } else {?
+  //   if (assessments.length == 0) {
+  //     console.log("here2");
+  //     setAssessments([{ name: newexam, assessment: "assessment" }]);
+  //   } else {
+  //     setAssessments([
+  //       ...assessments,
+  //       { name: newexam, assessment: "assessment" },
+  //     ]);
+
+  //     setCurrent(newexam);
+  //     setNewexam("");
+  //   }
+  // }
+  // };
+
+  const sortMBBSValues = (a, b) => {
+    // Extract the alphabetic part from the strings
+    const getAlphabeticPart = (str) => str.split("-")[1];
+
+    // Define a mapping for the alphabetic values
+    const alphabeticValues = { I: 1, II: 2, III: 3, IV: 4 };
+
+    // Get the alphabetic value for each string
+    const aValue = alphabeticValues[getAlphabeticPart(a)];
+    const bValue = alphabeticValues[getAlphabeticPart(b)];
+
+    // Sort based on alphabetic values
+    return aValue - bValue;
+  };
+  const sortedYears = yearValue.sort(sortMBBSValues);
+
+  const compareAcademicYears = (a, b) => {
+    // Get the last year from the academic year string
+    const getLastYear = (academicYear) => {
+      return parseInt(academicYear.split("-")[1]);
+    };
+
+    // Sort by descending order of last year
+    return getLastYear(b) - getLastYear(a);
   };
 
-  const handleSubmit = async (e) => {
+  const sortedAcademicYears = academicyearValue.sort(compareAcademicYears);
+
+  const handleAddExam = (e, nameChange = null) => {
+    console.log("c", nameChange);
+    if (nameChange !== null) {
+      console.log("here");
+      const updatedAssessments = assessments.map((assessment) => {
+        if (assessment.name === editedName) {
+          return { ...assessment, name: newexam };
+        }
+        return assessment;
+      });
+      setAssessments(updatedAssessments);
+      setNewexam("");
+    } else {
+      const existingIndex = assessments.findIndex(
+        (assessment) => assessment.name === newexam
+      );
+      if (existingIndex !== -1) {
+        // Assessment already exists, don't add it again
+        console.log("Assessment already exists");
+        return;
+      }
+      // Add new assessment
+      setAssessments([
+        ...assessments,
+        { name: newexam, assessment: "assessment" },
+      ]);
+      setCurrent(newexam);
+      setNewexam("");
+    }
+  };
+
+  const handleSubmit = async (e, name) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("excelFile", file);
-    console.log("here");
+    formData.append("name", name);
+    console.log("here", name);
 
     try {
       let response;
       if (file !== null) {
-        response = await API.post("/result", formData);
-        if (response.statusText == "OK") {
+        response = await API.post("/result/createResults", formData);
+        if (response.status == 200) {
           toast.success("File uploaded successfully");
           console.log("File uploaded successfully");
           setTimeout(() => {
             window.location.reload();
           }, 1000);
         } else {
-          console.error("Failed to upload file");
+          toast.error("Failed to upload file");
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
       }
     } catch (error) {
@@ -108,6 +213,7 @@ const Results = () => {
 
   const handleEdit = async (e) => {
     console.log("id", e.target, e.target.id);
+    console.log("check ob", e.target.id);
     const data = {
       year: selectYear,
       academicyear: selectAcademic,
@@ -118,22 +224,114 @@ const Results = () => {
     console.log("redux ", response);
   };
 
+  const handleChangeName = (assessment) => {
+    console.log(assessment);
+    setEditedName(assessment.name);
+    setCurrentAssessment(assessment);
+    if (currentAssessment) {
+      const input = document.getElementById("input");
+      input.value = currentAssessment.name;
+      const inputbtn = document.getElementById("inputbtn");
+      inputbtn.innerText = "Update Name";
+      input.focus();
+
+      console.log(newexam);
+    }
+  };
+
+  useEffect(() => {
+    if (currentAssessment) {
+      const input = document.getElementById("input");
+      input.value = currentAssessment.name;
+      const inputbtn = document.getElementById("inputbtn");
+      inputbtn.innerText = "Update Name";
+      input.focus();
+
+      console.log(newexam);
+    }
+  }, [currentAssessment]);
+
+  const handleUpdateName = async () => {
+    console.log("update", newexam, "h", current, "c", editedName);
+    const year = selectYear;
+    const academicyear = selectAcademic;
+    console.log("val", year, academicyear, currentAssessment);
+    if (year && academicyear && currentAssessment) {
+      try {
+        const response = await API.post("/result/updateAssessmentName", {
+          year: year,
+          academicyear: academicyear,
+          assessment: currentAssessment.assessment,
+          newName: newexam,
+        });
+        if (response.status == 200) {
+          toast.success("Assessment Name Updated");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      } catch (error) {
+        toast.error(error.message);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
+      }
+    } else {
+      assessments.forEach((assessment) => {
+        if (assessment.name === editedName) {
+          handleAddExam("e", assessment.name);
+        }
+      });
+
+      // assessments.forEach((assessment, index) => {
+      //   if (assessment.name === editedName) {
+      //     assessments[index] = newexam;
+      //   }
+      // });
+
+      // assessments.filter(assessment=>assessment.name!==editedName)
+      //
+    }
+    const input = document.getElementById("input");
+    input.value = "";
+    const inputbtn = document.getElementById("inputbtn");
+    inputbtn.innerText = "Create New Exam";
+  };
+
+  // useEffect(() => {
+  //   handleAddExam();
+  // }, [setAssessments]);
+
   const handleSelectClick = () => {
     // Clear the file input when the "select" button is clicked
     setFile(null);
   };
 
+  const getBtn = () => {
+    const inputbtn = document.getElementById("inputbtn");
+    return inputbtn?.textContent?.trim();
+  };
+
   const handleDelete = async (assessment) => {
     const year = selectYear;
     const academicyear = selectAcademic;
+    console.log("de", assessment);
     try {
       const response = await API.post("/result/deleteAssessment", {
         year: year,
         academicyear: academicyear,
         assessment: assessment,
       });
-      if (response.statusText == "OK") {
+      if (response.status == 200) {
         toast.success("Assessment Deleted");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } else {
         setTimeout(() => {
           window.location.reload();
         }, 1000);
@@ -146,6 +344,27 @@ const Results = () => {
     }
   };
 
+  // for storting of assessments
+  const sortOrder = ["1st", "2nd", "3rd", "4th", "5th"];
+
+  const customSort = (a, b) => {
+    const orderA = sortOrder.indexOf(a.name);
+    const orderB = sortOrder.indexOf(b.name);
+    return orderA - orderB;
+  };
+
+  const data = [
+    { name: "2nd", assessment: "ass1" },
+    { name: "1st", assessment: "ass1" },
+    { name: "5th", assessment: "ass1" },
+    { name: "4th", assessment: "ass1" },
+    { name: "3rd", assessment: "ass1" },
+  ];
+
+  const sortedData = [...data].sort(customSort);
+
+  console.log(sortedData);
+
   useEffect(() => {
     getSelect();
   }, []);
@@ -157,23 +376,25 @@ const Results = () => {
       </h1>
       <div className="input">
         <Toaster />
-        <select value={selectAcademic} onChange={handleAcademicChange}>
+        <select onChange={handleAcademicChange}>
           <option>select</option>
-          {academicyearValue?.map((academicyear) => (
-            <option value={academicyear.academicyear}>
-              {academicyear.academicyear}
-            </option>
+          {sortedAcademicYears?.map((academicyear) => (
+            <option value={academicyear}>{academicyear}</option>
           ))}
         </select>
-        <select value={selectYear} onChange={handleYearChange}>
+        <select onChange={handleYearChange}>
           <option>select</option>
-          {yearValue?.map((year) => (
-            <option value={year.year}>{year.year}</option>
+          {sortedYears?.map((year) => (
+            <option value={year}>{year}</option>
           ))}
         </select>
+        <button className="bg-white p-1 rounded-sm">
+          <Link to="/promote">Promote Students</Link>
+        </button>
       </div>
       <div className="details">
         <input
+          id="input"
           type="text"
           placeholder="Type Exam Name"
           onChange={(e) => setNewexam(e.target.value)}
@@ -181,7 +402,10 @@ const Results = () => {
           className=" placeholder-black px-1 text-sm bg-adminlightblue"
         />
         <small
-          onClick={handleAddExam}
+          id="inputbtn"
+          onClick={
+            getBtn() === "Create New Exam" ? handleAddExam : handleUpdateName
+          }
           className=" bg-adminlightblue px-2 py-1 cursor-pointer hover:bg-blue-500 active:outline-blue-200 active:outline text-nowrap rounded-sm"
         >
           Create New Exam
@@ -199,14 +423,12 @@ const Results = () => {
             </tr>
           </thead>
           <tbody className="resultsTable">
-            {assessments.map((assessment) => (
+            {assessments?.map((assessment) => (
               <tr>
-                <td className="left-align">{assessment}</td>
+                <td className="left-align">{assessment.name}</td>
                 <td>
                   {" "}
-                  <button
-                  // onClick={handleChangeAssessment(assessment)}
-                  >
+                  <button onClick={() => handleChangeName(assessment)}>
                     <CiEdit
                       style={{
                         color: "white",
@@ -218,7 +440,7 @@ const Results = () => {
                   </button>
                 </td>
                 <td>
-                  <button>
+                  <button onClick={() => handleDelete(assessment.assessment)}>
                     <FaRegCircleXmark
                       style={{
                         color: "white",
@@ -231,7 +453,7 @@ const Results = () => {
                 </td>
                 <td style={{ padding: 0 }}>
                   <form
-                    onSubmit={(e) => handleSubmit(e)}
+                    onSubmit={(e) => handleSubmit(e, assessment.name)}
                     encType="multipart/form-data"
                   >
                     <button className="  bg-slate-800 hover:bg-slate-500 active:outline active:outline-slate-300 p-1 rounded-sm">
@@ -260,7 +482,7 @@ const Results = () => {
                   <button
                     className="me-2 bg-slate-800  hover:bg-slate-500 active:outline active:outline-slate-300  p-1 rounded-sm"
                     onClick={handleEdit}
-                    id={assessment}
+                    id={assessment.assessment}
                   >
                     Edit List
                   </button>

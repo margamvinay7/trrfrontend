@@ -11,13 +11,10 @@ const Profile = () => {
   const student = useSelector((state) => state.studentReducer.student);
   const [status, setStatus] = useState("");
   const getResultStatus = async () => {
-    const response = await API.post(
-      "/result/getResultByYearAndAcademicYearAndStudentId",
-      {
-        studentId: student.id,
-        assessment: "Ist Internal Assessment",
-        year: ["MBBS-I", "MBBS-II", "MBBS-III", "MBBS-IV"],
-      }
+    const assessment = "Final Assessment";
+
+    const response = await API.get(
+      `/result/getResultByYearsAndAcademicYearAndStudentId?studentId=${student.id}&assessment=${assessment}`
     );
     setResults(response?.data);
     console.log("rea", response);
@@ -29,11 +26,10 @@ const Profile = () => {
   };
 
   const getAttendence = async () => {
-    const response = await API.post("/attendence/getTotalAttendence", {
-      studentId: student.id,
-
-      year: ["MBBS-I", "MBBS-II", "MBBS-III", "MBBS-IV"],
-    });
+    const response = await API.get(
+      `/attendance/getTotalAttendance?id=${student.id}`
+    );
+    console.log("tot", response);
     const filterData = response?.data.filter((item) => {
       return item.totalSubjectsCount !== 0;
     });
@@ -50,11 +46,13 @@ const Profile = () => {
     console.log("rer", response);
   };
   useEffect(() => {
-    if (student.id) {
-      console.log("studentid", student.id);
-      getResultStatus();
-      getAttendence();
-    }
+    // if (student.id) {
+    //   console.log("studentid", student.id);
+    //   getResultStatus();
+    //   getAttendence();
+    // }
+    getAttendence();
+    getResultStatus();
   }, [student]);
 
   return (
@@ -134,7 +132,7 @@ const Profile = () => {
           </tbody>
         </table>
         {status == "Fail" && (
-          <div className="text-white mt-1">
+          <div className="text-white mt-1 text-sm ms-5 sm:ms-0">
             Parents are advices to contact Deans as your child as failed
           </div>
         )}
@@ -156,7 +154,7 @@ const Profile = () => {
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
                   {attendence.year}
                 </td>
-                <td>{results[index]?.academicyear}</td>
+                <td>{attendence?.academicyear}</td>
                 <td
                   style={
                     Number(
@@ -172,7 +170,7 @@ const Profile = () => {
                     (attendence.totalPresentSubjectsCount /
                       attendence.totalSubjectsCount) *
                       100
-                  )}
+                  ).toFixed(2)}
                   %
                 </td>
               </tr>
@@ -180,7 +178,7 @@ const Profile = () => {
           </tbody>
         </table>
         {per == "ok" && (
-          <div className="text-white mt-1">
+          <div className="text-white mt-1 text-sm ms-5 sm:ms-0">
             Parents are advices to contact Deans as your child as Insufficient
             attendance
           </div>

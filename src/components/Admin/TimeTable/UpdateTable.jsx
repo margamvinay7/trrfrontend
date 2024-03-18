@@ -40,6 +40,7 @@ const Periods = ({ periods, onUpdate }) => {
 
 const UpdateTable = () => {
   let { state } = useLocation();
+  console.log("state", state);
   const navigate = useNavigate();
   const [selectAcademic, setSelectAcademic] = useState(state.academicyear);
   const [selectYear, setSelectYear] = useState(state.year);
@@ -47,32 +48,35 @@ const UpdateTable = () => {
   const [year, setYear] = useState(selectYear);
   const [id, setId] = useState(state.id);
 
-  const handleYearChange = async () => {
+  const handleGetTimetable = async () => {
     const year = selectYear;
     const academicyear = selectAcademic;
     try {
-      const response = await API.get(
-        `/select/getTimetableBYyearAndAcademicyear/${year}/${academicyear}`
-      );
+      if (year && academicyear) {
+        const response = await API.get(
+          `/timetable/getTimetableBYyearAndAcademicyear?year=${year}&academicyear=${academicyear}`
+        );
+        console.log("re u t", response);
 
-      setTimetable(
-        response?.data[0]?.Days.map((day) => ({
-          ...day,
-          Periods: [...day.Periods],
-        }))
-      );
+        setTimetable(
+          response?.data?.Days.map((day) => ({
+            ...day,
+            Periods: [...day.Periods],
+          }))
+        );
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const sortedTimetable = timetable.sort(
+  const sortedTimetable = timetable?.sort(
     (a, b) => dayOrderMap[a.day] - dayOrderMap[b.day]
   );
   //   console.log("sort array", sortedTimetable);
   useEffect(() => {
     if (selectYear && selectAcademic) {
-      handleYearChange();
+      handleGetTimetable();
     }
   }, [state]);
 
@@ -87,13 +91,14 @@ const UpdateTable = () => {
     });
 
     try {
-      const response = await API.post(`/timetable/updateTimetable/${tableId}`, {
+      const response = await API.post(`/timetable/updateTimetable`, {
+        id: tableId,
         year,
         academicyear,
         Days: timetable,
       });
 
-      if (response.statusText == "OK") {
+      if (response.status == 200) {
         toast.success("Table Edited successfully");
         console.log("File uploaded successfully");
         setTimeout(() => {
@@ -111,7 +116,7 @@ const UpdateTable = () => {
     }
     // try {
     //   await axios
-    //     .post(`https://trrserver.onrender.com/timetable/updateTimetable/${tableId}`, {
+    //     .post(`http://localhost:5000/timetable/updateTimetable/${tableId}`, {
     //       year,
     //       academicyear,
     //       Days: timetable,

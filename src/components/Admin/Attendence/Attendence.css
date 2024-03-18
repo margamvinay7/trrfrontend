@@ -59,7 +59,7 @@
     @apply border-collapse  w-[95vw];
   }
   .attendence select {
-    @apply min-w-36  text-center rounded-sm;
+    @apply min-w-24  text-center rounded-sm;
   }
   .containerattendence > .input {
     @apply flex flex-row gap-x-1;

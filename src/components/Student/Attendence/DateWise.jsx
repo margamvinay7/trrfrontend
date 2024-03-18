@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../Attendence/Attendence.css";
+import "./Attendence.css";
 import axios from "axios";
 import { API } from "../Student";
 import { useSelector } from "react-redux";
@@ -18,12 +18,29 @@ const DateWise = ({ startDate, endDate }) => {
 
   const getAttendence = async () => {
     console.log("in getAttendence");
+    //9747674821
     const response = await API.get(
-      `/attendence/getAttendenceByIdAndDateRange/${username}/${startDate}/${endDate}`
+      `/attendance/getAttendanceByIdAndDateRange?id=${username}&startDate=${startDate}&endDate=${endDate}`
     );
+    console.log("response attendence", response?.data);
     setAttendence(response?.data);
-    console.log("response attendence", response);
   };
+
+  const customDateSort = (a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+
+    if (dateA < dateB) {
+      return 1; // dateA comes before dateB
+    } else if (dateA > dateB) {
+      return -1; // dateA comes after dateB
+    } else {
+      return 0; // dates are equal
+    }
+  };
+
+  // Sort dates in ascending order (older dates first)
+  const sortedDates = attendence.sort(customDateSort);
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -45,13 +62,13 @@ const DateWise = ({ startDate, endDate }) => {
             </tr>
           </thead>
           <tbody>
-            {attendence?.map((date) => (
+            {sortedDates?.map((date) => (
               <tr>
-                <td>{handleDate(date.date?.split("T")[0])}</td>
-                {date.Subject.map((subject) => (
+                <td>{handleDate(date.date?.split(" ")[0])}</td>
+                {date?.subjects?.map((subject) => (
                   <td
                     style={
-                      subject.present
+                      subject.present == 1
                         ? { color: "rgba(42, 255, 42,1)" }
                         : { color: "rgba(199, 106, 48, 1)" }
                     }

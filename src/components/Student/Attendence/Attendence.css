@@ -29,14 +29,14 @@
   @apply flex flex-row gap-x-2  items-center;
 }
 .studentAttendence .statusbar {
-  @apply w-16 h-5;
+  @apply w-16 h-5 my-1;
 }
 
 /*
 Datewise table
 */
 .datewisepage {
-  @apply bg-studentattendenceblue1 mx-1 min-h-[50vh] flex justify-center;
+  @apply bg-studentattendenceblue1 mx-1 min-h-[70vh] flex justify-center;
 }
 .datewisepage .Table {
   @apply mx-1;
@@ -100,6 +100,10 @@ Datewise table
     @apply text-xs;
   }
 
+  .attendencedatestatus .status {
+    @apply flex flex-col ps-0 justify-center items-start    w-full;
+  }
+
   .studentAttendence select {
     @apply text-xs;
   }
@@ -109,7 +113,7 @@ Datewise table
   }
 
   .studentAttendence .statusbar {
-    @apply w-5 h-4;
+    @apply w-4 h-4 my-1;
   }
 
   .studentAttendence .selectmonth {
@@ -124,6 +128,9 @@ Datewise table
   .datewisepage table {
     @apply mx-1 w-[95vw];
   }
+  /* .datewisepage .Table {
+    @apply flex justify-center;
+  } */
 
   .datewisepage .Table th {
     @apply text-nowrap text-[8px] text-center    text-white;
@@ -148,10 +155,10 @@ Datewise table
     @apply w-[95vw] border-collapse;
   }
   .monthwisepage .Table th {
-    @apply text-nowrap  text-center overflow-hidden text-sm text-white;
+    @apply text-nowrap  text-center  font-normal overflow-hidden bg-studentmonthblue text-xs  text-blue-400;
   }
 
   .monthwisepage .Table td {
-    @apply text-nowrap p-1 text-center overflow-hidden;
+    @apply text-nowrap p-1 text-center text-xs overflow-hidden;
   }
 }

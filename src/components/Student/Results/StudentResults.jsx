@@ -15,7 +15,7 @@ const StudentResults = () => {
 
   // const getSelect = async () => {
   //   const response = await axios.get(
-  //     "https://trrserver.onrender.com/select/getAssessmentyearAndAcademicyear"
+  //     "http://localhost:5000/select/getAssessmentyearAndAcademicyear"
   //   );
   //   setYears(response?.data?.years);
 
@@ -27,7 +27,7 @@ const StudentResults = () => {
     // setSelectYear(e.target.value);
 
     const response = await API.get(
-      `/select/getAssessmentsYearAndId/${username}/${year}`
+      `/result/getAssessmentsByYearAndId?id=${username}&year=${year}`
     );
 
     setAssessments(response?.data);
@@ -39,11 +39,11 @@ const StudentResults = () => {
     const assessmentName = e.target.value;
 
     const response = await API.get(
-      `/result/getAssessmentByYearAndIdAndAssesssment/${username}/${selectYear}/${assessmentName}`
+      `/result/getAssessmentByYearAndIdAndAssessment?id=${username}&year=${year}&assessment=${assessmentName}`
     );
     // setAssessments(response?.data);
-    setAssessmentSubjects(response?.data[0].AssessmentSubject);
-    console.log("assess res", response.data[0]);
+    setAssessmentSubjects(response?.data?.assessmentSubjects);
+    console.log("assess res", response?.data);
   };
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const StudentResults = () => {
           <select value={selectAssessment} onChange={handleAssessmentChange}>
             <option>Select Exam</option>
             {assessments?.map((assessment) => (
-              <option value={assessment.assessment}>
+              <option value={assessment?.assessment}>
                 {assessment.assessment}
               </option>
             ))}
@@ -90,7 +90,7 @@ const StudentResults = () => {
             <th>PRACTICAL 100 Marks</th>
           </thead>
           <tbody>
-            {assessmentSubjects.map((subject) => (
+            {assessmentSubjects?.map((subject) => (
               <tr>
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
                   {subject.subject}

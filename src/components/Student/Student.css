@@ -14,6 +14,10 @@
   @apply flex justify-evenly gap-x-1 mx-1;
 }
 
+.student .image {
+  @apply ms-7 w-32 h-36 absolute top-[20px] m-2 outline outline-4 outline-white;
+}
+
 .student .custom-nav button {
   @apply mb-1 bg-gray-400 text-nowrap text-[1rem]  text-black w-full py-1;
 }
@@ -27,6 +31,10 @@
 @media (max-width: 550px) {
   .student .custom-nav button {
     @apply text-nowrap   px-0 text-center w-full overflow-hidden text-xs;
+  }
+
+  .student .image {
+    @apply absolute ms-3 w-20 h-28 top-[40px] m-2;
   }
 
   .student .info {

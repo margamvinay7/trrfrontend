@@ -1,5 +1,5 @@
 import React from "react";
-import "../Attendence/Attendence.css";
+import "./Attendence.css";
 import DateWise from "./DateWise";
 import MonthWise from "./MonthWise";
 import { useState } from "react";
@@ -46,10 +46,10 @@ const StudentAttendence = () => {
             </div>
           </div>
           <div className="status">
-            <div>
+            <div className="text-xs sm:text-sm">
               <div className="statusbar bg-green-700"></div>Present
             </div>
-            <div>
+            <div className="text-xs sm:text-sm">
               <div className="statusbar bg-customorange"></div> Absent
             </div>
           </div>

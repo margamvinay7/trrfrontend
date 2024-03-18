@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { studentActions } from "../../redux/Student";
 import { jwtDecode } from "jwt-decode";
-
+import profile from "../../profile.jpg";
 import axios from "axios";
 
-export const API = axios.create({ baseURL: "https://trrserver.onrender.com" });
+export const API = axios.create({
+  baseURL: "https://trrmedical.3pixelsonline.in/api",
+});
 API.interceptors.request.use((req) => {
   if (sessionStorage.getItem("token")) {
     req.headers.Authorization = `Bearer ${sessionStorage.getItem("token")}`;
@@ -36,12 +38,25 @@ const Student = () => {
   }
 
   const [student, setStudent] = useState({});
+  const [imageSrc, setImageSrc] = useState(null);
   const getStudent = async () => {
-    await API.get(`/getStudentById/${username}`).then((res) => {
+    await API.get(`/student/getStudentById?id=${username}`).then((res) => {
       dispatch(studentActions.details(res?.data));
       console.log(res);
       setStudent(res?.data);
     });
+
+    try {
+      const resimgae = await API.get(`student/fetchImageData?id=${username}`);
+      // const blob = resimgae?.data?.blob();
+      console.log(resimgae);
+      // // Create a Blob URL for the image
+      // const imageUrl = URL.createObjectURL(blob);
+      setImageSrc(resimgae?.data.trim());
+      console.log("imag", resimgae?.data.trim());
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
   };
   dispatch(studentActions.navbar(path));
   const handleYears = (e) => {
@@ -49,23 +64,6 @@ const Student = () => {
     dispatch(studentActions.year(e.target.id));
   };
 
-  // const handleImage = (image) => {
-  //   console.log("imag", image);
-  //   const binary = new Uint8Array(image?.data);
-
-  //   const base64 = btoa(String.fromCharCode(...binary));
-  //   console.log(base64);
-  //   return base64;
-  //   // const uint8Array = new Uint8Array(image.data);
-  //   // const blob = new Blob([uint8Array]);
-  //   // const fileReader = new FileReader();
-  //   // fileReader.onload = function (event) {
-  //   //   const base64Data = event.target.result;
-  //   //   console.log(base64Data);
-  //   //   return base64Data;
-  //   // };
-  //   // fileReader.readAsDataURL(blob);
-  // };
   const handleNavbar = (e) => {
     console.log("in navbar", e.target.id);
     dispatch(studentActions.navbar(path));
@@ -81,17 +79,21 @@ const Student = () => {
         <h1>Student Info</h1>
       </div>
       <div>
-        {/* <img
-          src={`data:image/jpeg;base64,${handleImage(
-            student.image
-          )}.split('jpegbase64/')[1]`}
-        /> */}
+        <img
+          className="image"
+          src={
+            imageSrc !== "imagenotfound"
+              ? `data:image/jpg;charset=utf8;base64,${imageSrc}`
+              : profile
+          }
+        />
       </div>
+
       <div className=" bg-studentgray">
         <div className="info">
           <div>
             Full Name&nbsp;&nbsp;&nbsp; : &nbsp;
-            <strong className="text-nowrap">{student?.fullName}</strong>
+            <span className="text-nowrap">{student?.fullName}</span>
           </div>
           <div>
             Roll No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;

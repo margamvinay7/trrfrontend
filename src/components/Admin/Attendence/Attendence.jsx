@@ -12,8 +12,12 @@ const Attendence = () => {
   const [timetable, setTimetable] = useState([]);
   const [date, setDate] = useState(new Date());
   const [periods, setPeriods] = useState([]);
-  const [year, setYear] = useState([]);
-  const [academicyear, setAcademicyear] = useState([]);
+  const [year, setYear] = useState("");
+  const [day, setDay] = useState(new Date().getDay());
+  const [academicyear, setAcademicyear] = useState("");
+  const [academicyearValue, setAcademicYearValue] = useState([]);
+  // const [acad, setAcad] = useState("");
+  const [selectAcademic, setSelectAcademic] = useState("");
 
   const dayNames = [
     "SUNDAY",
@@ -24,39 +28,120 @@ const Attendence = () => {
     "FRIDAY",
     "SATURDAY",
   ];
-  const day = new Date().getDay();
-  console.log("day", day);
   const [today, setToday] = useState(dayNames[day]);
+  const handleDateChange = (e) => {
+    setDate(new Date(e.target.value));
+    setDay(new Date(e.target.value).getDay());
+    const day = new Date(e.target.value).getDay();
+    console.log("da day", day);
+    setToday(dayNames[day]);
+  };
 
-  const handleYearChange = async (e) => {
-    setSelectYear(e.target.value);
-    const year = e.target.value;
-    setYear(year);
-    await API.get(`/select/getTimetableByYear/${year}`).then(
-      async (response) => {
-        console.log(
-          response?.data[0]?.Days.filter((day) => day.day == today)[0]?.Periods
-        );
-        setTimetable(response?.data[0]?.Days.filter((day) => day.day == today));
-        setPeriods(
-          response?.data[0]?.Days.filter((day) => day.day == today)[0]?.Periods
-        );
-        const academicyear = response?.data[0]?.academicyear;
-        setAcademicyear(academicyear);
-        console.log("it is response", response?.data[0]?.academicyear);
-        const students = await API.get(
-          `/select/getStudentByYearAndAcademicyear/${year}/${academicyear}`
-        );
-        setStudents(students?.data);
-      }
-    );
+  useEffect(() => {
+    handleAcademicChange();
+  }, [today]);
+
+  // const day = new Date().getDay;
+  console.log("selected date", date, "day", day);
+  console.log("day", selectYear, selectAcademic);
+
+  const handleAcademicChange = async (e = null) => {
+    const year = selectYear;
+    let academicyear;
+    if (e == null) {
+      academicyear = selectAcademic;
+    } else {
+      academicyear = e.target.value;
+      setAcademicyear(academicyear);
+      setSelectAcademic(academicyear);
+    }
+
+    if (year && academicyear) {
+      const response = await API.get(
+        `/timetable/getTimetableBYyearAndAcademicyear?year=${year}&academicyear=${academicyear}`
+      )
+        .then(async (response) => {
+          // console.log("r e s t", response);
+          // console.log(
+          //   "new",
+          //   response?.data?.Days.filter((day) => day.day == today)[0]?.Periods
+          // );
+          setTimetable(
+            response?.data?.Days.filter((day) => day.day == today)[0]
+          );
+          setPeriods(
+            response?.data?.Days.filter((day) => day.day == today)[0]?.Periods
+          );
+          // const year = response?.data?.year;
+          // setYear(year);
+          // console.log("it is response ac", academicyear, year);
+        })
+        .then(async () => {
+          if (year && academicyear) {
+            const students = await API.get(
+              `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
+            );
+            console.log("st", students);
+            setStudents(students?.data);
+          }
+        });
+    }
+  };
+
+  const handleYearChange = async (e = null) => {
+    let year;
+    if (e == null) {
+      year = selectYear;
+    } else {
+      setSelectYear(e.target.value);
+      year = e.target.value;
+      setYear(year);
+    }
+
+    const academicyear = selectAcademic;
+
+    console.log("it is response ye", academicyear, year);
+    if (year && academicyear) {
+      await API.get(
+        `/timetable/getTimetableBYyearAndAcademicyear?year=${year}&academicyear=${academicyear}`
+      )
+        .then(async (response) => {
+          // console.log("r e s t", response);
+          // console.log(
+
+          //   response?.data?.Days.filter((day) => day.day == today)[0]?.Periods
+          // );
+          setTimetable(
+            response?.data?.Days.filter((day) => day.day == today)[0]
+          );
+          setPeriods(
+            response?.data?.Days.filter((day) => day.day == today)[0]?.Periods
+          );
+          // const academicyearv = response?.data?.academicyear;
+          // setAcademicyear(academicyearv);
+          // console.log("it is response", academicyear, year);
+        })
+        .then(async () => {
+          if (year && academicyear) {
+            const students = await API.get(
+              `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
+            );
+            console.log("st", students);
+            setStudents(students?.data);
+          }
+        });
+    }
   };
 
   const getSelect = async () => {
-    const response = await API.get("/select/getTimetableYear");
+    const response = await API.get(
+      "/timetable/getTimetableYearAndAcademicyear"
+    );
     setYearValue(response?.data?.years);
-    console.log("yer", response?.data?.years);
-    setSelectYear(response?.data?.years[0]);
+    console.log("yer", response?.data);
+    // setSelectYear(response?.data?.years);
+    // setAcademicYearValue(["2019-2020", "2021-2022", "2018-2019", "2020-2021"]);
+    setAcademicYearValue(response?.data?.academicyears);
   };
 
   var attendence = [];
@@ -75,48 +160,80 @@ const Attendence = () => {
 
   console.log("predefined", attendence);
 
+  // const handleAttendence = (e) => {
+  //   console.log(e.target.id);
+  //   console.log(e.target.className);
+  //   console.log(e);
+
+  //   const subject = e.target.className.split("@");
+
+  //   let targetStudent = attendence.filter((student) => {
+  //     return student.studentId == e.target.id;
+  //   });
+
+  //   if (targetStudent.length !== 0) {
+  //     const existingSubjectIndex = targetStudent[0].subjects.findIndex(
+  //       (subj) => subj.subject === subject[1]
+  //     );
+
+  //     if (existingSubjectIndex !== -1) {
+  //       targetStudent[0].subjects[existingSubjectIndex].present =
+  //         !targetStudent[0].subjects[existingSubjectIndex].present;
+
+  //       console.log(
+  //         "present value",
+  //         targetStudent[0].subjects[existingSubjectIndex].present
+  //       );
+  //     }
+  //   }
+  //   // attendence.push(targetStudent[0]);
+
+  //   console.log("attendence", attendence);
+  // };
+
   const handleAttendence = (e) => {
-    console.log(e.target.id);
-    console.log(e.target.className);
-    console.log(e);
-
     const subject = e.target.className.split("@");
+    const studentId = e.target.id;
 
-    let targetStudent = attendence.filter((student) => {
-      return student.studentId == e.target.id;
-    });
+    // Find the student in the attendence array
+    const targetStudentIndex = attendence.findIndex(
+      (student) => student.studentId === studentId
+    );
 
-    if (targetStudent.length !== 0) {
-      const existingSubjectIndex = targetStudent[0].subjects.findIndex(
-        (subj) => subj.subject === subject[1]
-      );
+    if (targetStudentIndex !== -1) {
+      // Find the subject index in the subjects array of the student
+      const existingSubjectIndex = attendence[
+        targetStudentIndex
+      ].subjects.findIndex((subj) => subj.subject === subject[1]);
 
       if (existingSubjectIndex !== -1) {
-        targetStudent[0].subjects[existingSubjectIndex].present =
-          !targetStudent[0].subjects[existingSubjectIndex].present;
+        // Toggle the 'present' value for the subject
+        attendence[targetStudentIndex].subjects[existingSubjectIndex].present =
+          !attendence[targetStudentIndex].subjects[existingSubjectIndex]
+            .present;
 
         console.log(
           "present value",
-          targetStudent[0].subjects[existingSubjectIndex].present
+          attendence[targetStudentIndex].subjects[existingSubjectIndex].present
         );
       }
     }
-    // attendence.push(targetStudent[0]);
-
-    console.log("attendence", attendence);
   };
 
   const handleSaveAttendence = async () => {
     try {
-      const response = await API.post("/attendence", attendence);
+      const response = await API.post(
+        "/attendance/createAttendance",
+        attendence
+      );
       console.log("res", response);
-      if (response.statusText == "Already Reported") {
-        toast.error(`${response?.data?.message}`);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+      if (response.status == 208) {
+        toast.error("Attendence Already Marked");
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
       }
-      if (response.statusText == "OK") {
+      if (response.status == 200) {
         toast.success("Attendence Saved");
         console.log("File uploaded successfully");
         setTimeout(() => {
@@ -137,6 +254,34 @@ const Attendence = () => {
     //   .then(window.location.reload());
   };
 
+  const sortMBBSValues = (a, b) => {
+    // Extract the alphabetic part from the strings
+    const getAlphabeticPart = (str) => str.split("-")[1];
+
+    // Define a mapping for the alphabetic values
+    const alphabeticValues = { I: 1, II: 2, III: 3, IV: 4 };
+
+    // Get the alphabetic value for each string
+    const aValue = alphabeticValues[getAlphabeticPart(a)];
+    const bValue = alphabeticValues[getAlphabeticPart(b)];
+
+    // Sort based on alphabetic values
+    return aValue - bValue;
+  };
+  const sortedYears = yearValue.sort(sortMBBSValues);
+
+  const compareAcademicYears = (a, b) => {
+    // Get the last year from the academic year string
+    const getLastYear = (academicYear) => {
+      return parseInt(academicYear.split("-")[1]);
+    };
+
+    // Sort by descending order of last year
+    return getLastYear(b) - getLastYear(a);
+  };
+
+  const sortedAcademicYears = academicyearValue.sort(compareAcademicYears);
+
   useEffect(() => {
     getSelect();
   }, []);
@@ -145,17 +290,19 @@ const Attendence = () => {
       <h1 className="mb-3 text-xl font-medium text-adminyellow">Attendence</h1>
       <div className="input">
         <Toaster />
-        <select value={selectYear} required onChange={handleYearChange}>
-          <option>Select</option>
-          {yearValue?.map((year) => (
-            <option value={year.year}>{year.year}</option>
+        <select onChange={handleAcademicChange}>
+          <option>select</option>
+          {sortedAcademicYears?.map((academicyear) => (
+            <option value={academicyear}>{academicyear}</option>
           ))}
         </select>
-        <input
-          type="date"
-          required
-          onChange={(e) => setDate(new Date(e.target.value))}
-        />
+        <select onChange={handleYearChange}>
+          <option>Select</option>
+          {sortedYears?.map((year) => (
+            <option value={year}>{year}</option>
+          ))}
+        </select>
+        <input type="date" required onChange={handleDateChange} />
       </div>
       <div className="Table table-container">
         <table className="table-auto scroll-table">
