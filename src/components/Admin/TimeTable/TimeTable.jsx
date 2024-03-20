@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import "../TimeTable/TimeTable.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { API } from "../../Student/Student";
+import toast, { Toaster } from "react-hot-toast";
 
 const dayOrderMap = {
   MONDAY: 1,
@@ -27,6 +28,7 @@ const Periods = ({ periods }) => {
 };
 
 const TimeTable = () => {
+  const navigate = useNavigate();
   const username = useSelector((state) => state.studentReducer.username);
   const [yearValue, setYearValue] = useState([]);
   const [academicyearValue, setAcademicYearValue] = useState([]);
@@ -36,6 +38,7 @@ const TimeTable = () => {
   const [year, setYear] = useState("");
   const [acad, setAcad] = useState("");
   const [id, setId] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   ///select/getTimetableYearAndAcademicyear
 
@@ -128,6 +131,47 @@ const TimeTable = () => {
 
   const sortedAcademicYears = academicyearValue.sort(compareAcademicYears);
 
+  const handleButtonClick = () => {
+    setIsOpen(true); // Open popup on button click
+  };
+
+  const handleDelete = async (id) => {
+    if (id !== "") {
+      console.log("id", id);
+      try {
+        const response = await API.post(`/timetable/deleteTimetable`, {
+          id: id,
+        });
+
+        if (response.status == 200) {
+          toast.success("Table Deleted successfully");
+          console.log("File uploaded successfully");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          console.error("Failed to upload file");
+        }
+      } catch (error) {
+        toast.error("Failed to Delete");
+        console.error("Error:", error);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+      console.log("Item deleted!");
+      setIsOpen(false);
+    } else {
+      console.log("select timetable");
+      toast.error("Select Timetable");
+      setIsOpen(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false); // Close popup on cancel
+  };
+
   useEffect(() => {
     getSelect();
   }, []);
@@ -135,6 +179,7 @@ const TimeTable = () => {
   return (
     <div className="bg-admintimeorange min-h-[90vh] timetable  min-w-[80%] flex  mx-1 flex-col items-center pt-7">
       <h1 className="mb-3 font-semibold">Time Table</h1>
+      <Toaster />
       <div className="input">
         <select onChange={handleAcademicChange}>
           <option>select</option>
@@ -148,6 +193,44 @@ const TimeTable = () => {
             <option value={year}>{year}</option>
           ))}
         </select>
+        <div className="popup-container ">
+          <button onClick={handleButtonClick} style={{ width: 100 }}>
+            Delete
+          </button>
+          {isOpen && (
+            <div>
+              <div className="popup ">
+                <p className="text-black mt-4">
+                  Are you sure you want to delete?
+                </p>
+                <div className="flex justify-between  mt-8 pop">
+                  <button
+                    onClick={handleCancel}
+                    style={{
+                      backgroundColor: "rgb(209, 213, 219)",
+                      color: "black",
+                      width: 100,
+                      padding: 4,
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDelete(id)}
+                    style={{
+                      backgroundColor: "rgba(189, 68, 46, 1)",
+                      color: "white",
+                      width: 100,
+                      padding: 4,
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
         <button>
           <Link to="/createNew">Create New</Link>
         </button>

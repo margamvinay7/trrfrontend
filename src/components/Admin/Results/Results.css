@@ -1,5 +1,5 @@
 .results .details {
-  @apply flex flex-row gap-x-1 m-8;
+  @apply flex flex-row gap-x-1 m-4;
 }
 
 .results .details input {
@@ -7,7 +7,7 @@
 }
 
 .results > .input {
-  @apply flex flex-row gap-x-1;
+  @apply flex flex-row gap-x-1 m-4;
 }
 
 .results select {

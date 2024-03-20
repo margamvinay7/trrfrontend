@@ -16,8 +16,45 @@ const StudentProfile = () => {
   const [selectYear, setSelectYear] = useState("");
   const [students, setStudents] = useState([]);
   const [searchlist, setSearchList] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   console.log("studentprofile");
+
+  const handleButtonClick = () => {
+    setIsOpen(true); // Open popup on button click
+  };
+
+  const handleDelete = async () => {
+    const year = selectYear;
+    const academicyear = selectAcademic;
+
+    if (year && academicyear) {
+      try {
+        const response = await API.post(`/student/deleteStudents`, {
+          year: year.toUpperCase(),
+          academicyear: academicyear,
+        });
+        if (response.status == 200) {
+          toast.success("Student Data Deleted  successfully! ");
+          console.log("Student updated successfully!");
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      } catch (error) {
+        console.log("err", error);
+        toast.error("Failed to  Delete Students Data");
+      }
+
+      console.log("Item deleted!");
+      setIsOpen(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false); // Close popup on cancel
+  };
+
   const handleYearChange = async (e) => {
     setSelectYear(e.target.value);
     const year = e.target.value;
@@ -205,9 +242,43 @@ const StudentProfile = () => {
             />
           </form>
         </div>
+
+        {/* delete students profiles
+         <div className="popup-container ">
+          <button onClick={handleButtonClick}>Delete</button>
+          {isOpen && (
+            <div className="popup-overlay">
+              <div className="popup ">
+                <p className="text-black mt-4">
+                  Are you sure you want to delete?
+                </p>
+                <div className="flex justify-between mt-8 pop">
+                  <button
+                    onClick={handleCancel}
+                    style={{
+                      backgroundColor: "rgb(209, 213, 219)",
+                      color: "black",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    style={{
+                      backgroundColor: "rgba(189, 68, 46, 1)",
+                      color: "white",
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div> */}
         <div className="flex items-center bg-white pe-2 rounded-md">
           <input
-            className="w-[20vw] rounded-md text-black ps-2  placeholder-slate-600"
+            className="w-[15vw] rounded-md text-black ps-2 p-1  placeholder-slate-600"
             onChange={handleSearch}
             placeholder="Search Student"
           />

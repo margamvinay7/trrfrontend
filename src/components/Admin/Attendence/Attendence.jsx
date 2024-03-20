@@ -3,6 +3,7 @@ import "../Attendence/Attendence.css";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { API } from "../../Student/Student";
+import { Link } from "react-router-dom";
 
 ///select/getTimetableYear
 const Attendence = () => {
@@ -18,6 +19,8 @@ const Attendence = () => {
   const [academicyearValue, setAcademicYearValue] = useState([]);
   // const [acad, setAcad] = useState("");
   const [selectAcademic, setSelectAcademic] = useState("");
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
+  const [attendence, setAttendence] = useState([]);
 
   const dayNames = [
     "SUNDAY",
@@ -33,7 +36,7 @@ const Attendence = () => {
     setDate(new Date(e.target.value));
     setDay(new Date(e.target.value).getDay());
     const day = new Date(e.target.value).getDay();
-    console.log("da day", day);
+
     setToday(dayNames[day]);
   };
 
@@ -41,11 +44,9 @@ const Attendence = () => {
     handleAcademicChange();
   }, [today]);
 
-  // const day = new Date().getDay;
-  console.log("selected date", date, "day", day);
-  console.log("day", selectYear, selectAcademic);
-
   const handleAcademicChange = async (e = null) => {
+    let currentPeriods = null;
+    let currentStudents = null;
     const year = selectYear;
     let academicyear;
     if (e == null) {
@@ -72,6 +73,9 @@ const Attendence = () => {
           setPeriods(
             response?.data?.Days.filter((day) => day.day == today)[0]?.Periods
           );
+          currentPeriods = response?.data?.Days.filter(
+            (day) => day.day == today
+          )[0]?.Periods;
           // const year = response?.data?.year;
           // setYear(year);
           // console.log("it is response ac", academicyear, year);
@@ -81,14 +85,36 @@ const Attendence = () => {
             const students = await API.get(
               `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
             );
-            console.log("st", students);
+
             setStudents(students?.data);
+            currentStudents = students?.data;
           }
         });
     }
+
+    if (currentPeriods !== null && currentStudents !== null) {
+      setAttendence(
+        currentStudents?.map((student) => ({
+          studentId: student?.id,
+          name: student.fullName,
+          date: date,
+          year: year,
+          academicyear: academicyear,
+          subjects: currentPeriods?.map((period) => ({
+            time: period?.time,
+            subject: period?.subject,
+            present: false,
+          })),
+        }))
+      );
+    }
   };
 
+  // var attendence = [];
+
   const handleYearChange = async (e = null) => {
+    let currentPeriods = null;
+    let currentStudents = null;
     let year;
     if (e == null) {
       year = selectYear;
@@ -100,7 +126,6 @@ const Attendence = () => {
 
     const academicyear = selectAcademic;
 
-    console.log("it is response ye", academicyear, year);
     if (year && academicyear) {
       await API.get(
         `/timetable/getTimetableBYyearAndAcademicyear?year=${year}&academicyear=${academicyear}`
@@ -117,6 +142,9 @@ const Attendence = () => {
           setPeriods(
             response?.data?.Days.filter((day) => day.day == today)[0]?.Periods
           );
+          currentPeriods = response?.data?.Days.filter(
+            (day) => day.day == today
+          )[0]?.Periods;
           // const academicyearv = response?.data?.academicyear;
           // setAcademicyear(academicyearv);
           // console.log("it is response", academicyear, year);
@@ -126,10 +154,28 @@ const Attendence = () => {
             const students = await API.get(
               `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
             );
-            console.log("st", students);
+
             setStudents(students?.data);
+            currentStudents = students?.data;
           }
         });
+    }
+
+    if (currentPeriods !== null && currentStudents !== null) {
+      setAttendence(
+        currentStudents?.map((student) => ({
+          studentId: student?.id,
+          name: student.fullName,
+          date: date,
+          year: year,
+          academicyear: academicyear,
+          subjects: currentPeriods?.map((period) => ({
+            time: period?.time,
+            subject: period?.subject,
+            present: false,
+          })),
+        }))
+      );
     }
   };
 
@@ -138,25 +184,11 @@ const Attendence = () => {
       "/timetable/getTimetableYearAndAcademicyear"
     );
     setYearValue(response?.data?.years);
-    console.log("yer", response?.data);
+
     // setSelectYear(response?.data?.years);
     // setAcademicYearValue(["2019-2020", "2021-2022", "2018-2019", "2020-2021"]);
     setAcademicYearValue(response?.data?.academicyears);
   };
-
-  var attendence = [];
-
-  attendence = students?.map((student) => ({
-    studentId: student?.id,
-    date: date,
-    year: year,
-    academicyear: academicyear,
-    subjects: periods?.map((period) => ({
-      time: period?.time,
-      subject: period?.subject,
-      present: false,
-    })),
-  }));
 
   console.log("predefined", attendence);
 
@@ -192,26 +224,22 @@ const Attendence = () => {
   // };
 
   const handleAttendence = (e) => {
-    const subject = e.target.className.split("@");
-    const studentId = e.target.id;
-
+    const subject = e?.target?.className.split("@");
+    const studentId = e?.target?.id;
     // Find the student in the attendence array
     const targetStudentIndex = attendence.findIndex(
       (student) => student.studentId === studentId
     );
-
     if (targetStudentIndex !== -1) {
       // Find the subject index in the subjects array of the student
       const existingSubjectIndex = attendence[
         targetStudentIndex
       ].subjects.findIndex((subj) => subj.subject === subject[1]);
-
       if (existingSubjectIndex !== -1) {
         // Toggle the 'present' value for the subject
         attendence[targetStudentIndex].subjects[existingSubjectIndex].present =
           !attendence[targetStudentIndex].subjects[existingSubjectIndex]
             .present;
-
         console.log(
           "present value",
           attendence[targetStudentIndex].subjects[existingSubjectIndex].present
@@ -219,6 +247,28 @@ const Attendence = () => {
       }
     }
   };
+
+  // const getEditAttendance = async () => {
+  //   try {
+  //     const response = await API.post(
+  //       "/attendance/getAttendenceByYearAcademicyearId",
+  //       {
+  //         year: year,
+  //         academicYear: academicyear,
+  //         date: date,
+  //       }
+  //     );
+  //     console.log("it is response", response);
+  //   } catch (error) {}
+  // };
+
+  // useEffect(() => {
+  //   if (year && academicyear && date) {
+  //     // getAttendenceByYearAcademicyearId
+
+  //     getEditAttendance();
+  //   }
+  // }, [date]);
 
   const handleSaveAttendence = async () => {
     try {
@@ -282,6 +332,58 @@ const Attendence = () => {
 
   const sortedAcademicYears = academicyearValue.sort(compareAcademicYears);
 
+  const handleSelectAll = (e, time) => {
+    const isChecked = e.target.checked;
+    const updatedSelectedCheckboxes = { ...selectedCheckboxes };
+    updatedSelectedCheckboxes[time] = isChecked;
+    setSelectedCheckboxes(updatedSelectedCheckboxes);
+
+    const updatedAttendance = attendence.map((student) => ({
+      ...student,
+      subjects: student?.subjects?.map((subject) => {
+        if (subject.time === time) {
+          return {
+            ...subject,
+            present: isChecked,
+          };
+        } else {
+          return subject;
+        }
+      }),
+    }));
+    setAttendence(updatedAttendance);
+  };
+
+  const handleIndividualSelect = (e) => {
+    const { id, className } = e.target;
+    const [time, subject] = className.split("@");
+
+    const updatedAttendance = attendence?.map((student) => {
+      if (student.id === id) {
+        const updatedSubjects = student?.subjects?.map((subj) => {
+          if (subj.time === time && subj.subject === subject) {
+            return {
+              ...subj,
+              present: !subj.present, // Toggle the present value
+            };
+          }
+          return subj;
+        });
+        return {
+          ...student,
+          subjects: updatedSubjects,
+        };
+      }
+      return student;
+    });
+
+    setAttendence(updatedAttendance);
+  };
+
+  const handleEdit = () => {
+    //editAttendance
+  };
+
   useEffect(() => {
     getSelect();
   }, []);
@@ -334,20 +436,51 @@ const Attendence = () => {
             </tr>
           </thead>
           <tbody>
-            {students?.map((student) => (
+            <tr>
+              <td></td>
+              <td></td>
+              {periods.map((period, index) => (
+                <td>
+                  <label
+                    htmlFor={`select${index}`}
+                    style={{
+                      cursor: "pointer",
+                      color: selectedCheckboxes[period.time]
+                        ? "white"
+                        : "white",
+                    }}
+                  >
+                    {selectedCheckboxes[period.time]
+                      ? "Deselect All"
+                      : "Select All"}
+                  </label>
+                  <input
+                    id={`select${index}`}
+                    type="checkbox"
+                    style={{ display: "none" }} // Hide the checkbox
+                    onChange={(e) => handleSelectAll(e, period.time)} // Use the hidden checkbox to trigger the selection/deselection
+                    checked={selectedCheckboxes[period.time]}
+                  />
+                </td>
+              ))}
+            </tr>
+
+            {attendence?.map((att) => (
               <tr onClick={(e) => handleAttendence(e)}>
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
-                  {student.fullName}
+                  {att.name}
                 </td>
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
-                  {student.id}
+                  {att.studentId}
                 </td>
-                {periods?.map((period) => (
+                {att.subjects?.map((period) => (
                   <td>
                     <input
                       type="checkbox"
+                      checked={period.present}
                       className={`${period.time}@${period.subject}`}
-                      id={student.id}
+                      id={att.studentId}
+                      onClick={(e) => handleIndividualSelect(e)}
                     />
                   </td>
                 ))}
@@ -356,12 +489,17 @@ const Attendence = () => {
           </tbody>
         </table>
       </div>
-      <button
-        className="bg-skyblue hover:bg-sky-500 active:outline active:outline-sky-300 m-5 px-4 text-center w-20 rounded-sm"
-        onClick={handleSaveAttendence}
-      >
-        Save
-      </button>
+      <div>
+        <button
+          className="bg-skyblue hover:bg-sky-500 active:outline active:outline-sky-300 m-5  me-0 px-4 text-center w-20 rounded-sm"
+          onClick={handleSaveAttendence}
+        >
+          Save
+        </button>
+        <button className="bg-skyblue hover:bg-sky-500 active:outline active:outline-sky-300 m-5 ms-2 px-4 text-center w-20 rounded-sm">
+          <Link to="/editattendance">Edit</Link>
+        </button>
+      </div>
     </div>
   );
 };

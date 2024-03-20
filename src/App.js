@@ -29,6 +29,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { studentActions } from "./redux/Student";
 import Promoto from "./components/Admin/Results/Promoto";
+import EditAttendance from "./components/Admin/Attendence/EditAttendance";
 
 function App() {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ function App() {
             <Route path="/createNew" element={<CreateNew />} />
             <Route path="/list" element={<List />} />
             <Route path="/edit" element={<Edit />} />
+            <Route path="/editattendance" element={<EditAttendance />} />
             <Route path="/updatetimetable" element={<UpdateTable />} />
           </>
         ) : user === "student" ? (

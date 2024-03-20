@@ -15,6 +15,8 @@ const UpdateProfile = () => {
     gender: "",
     mobile: "",
     joiningyear: "",
+    parentName: "",
+    parentMobile: "",
     address: "",
   });
 
@@ -24,6 +26,7 @@ const UpdateProfile = () => {
       `/student/getStudentById?id=${state.id}`
     ).then((res) => {
       setStudent(res?.data);
+      console.log("student details", res?.data);
     });
   };
   const { state } = useLocation();
@@ -52,6 +55,8 @@ const UpdateProfile = () => {
       formData.append("gender", student.gender);
       formData.append("mobile", student.mobile);
       formData.append("joiningyear", student.joiningyear);
+      formData.append("parentName", student.parentName);
+      formData.append("parentMobile", student.parentMobile);
       formData.append("address", student.address);
 
       // Send updated student data to the server
@@ -181,6 +186,27 @@ const UpdateProfile = () => {
               type="text"
               name="gender"
               value={student.gender}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className=" flex gap-x-2">
+            <label>Parent Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</label>
+            <input
+              className=" p-1 rounded-sm"
+              type="text"
+              name="parentName"
+              value={student.parentName}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className=" flex gap-x-2">
+            <label>Parent Mobile&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</label>
+            <input
+              className=" p-1 rounded-sm"
+              type="text"
+              name="parentMobile"
+              value={student.parentMobile}
               onChange={handleInputChange}
             />
           </div>

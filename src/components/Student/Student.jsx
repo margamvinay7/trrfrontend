@@ -8,7 +8,7 @@ import profile from "../../profile.jpg";
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "https://trrmedical.3pixelsonline.in/api",
+  baseURL: "http://localhost:8080/api",
 });
 API.interceptors.request.use((req) => {
   if (sessionStorage.getItem("token")) {

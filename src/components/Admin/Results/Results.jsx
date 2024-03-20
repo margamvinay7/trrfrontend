@@ -374,24 +374,7 @@ const Results = () => {
       <h1 className="mb-3 text-adminyellow text-lg font-medium">
         Student Results
       </h1>
-      <div className="input">
-        <Toaster />
-        <select onChange={handleAcademicChange}>
-          <option>select</option>
-          {sortedAcademicYears?.map((academicyear) => (
-            <option value={academicyear}>{academicyear}</option>
-          ))}
-        </select>
-        <select onChange={handleYearChange}>
-          <option>select</option>
-          {sortedYears?.map((year) => (
-            <option value={year}>{year}</option>
-          ))}
-        </select>
-        <button className="bg-white p-1 rounded-sm">
-          <Link to="/promote">Promote Students</Link>
-        </button>
-      </div>
+
       <div className="details">
         <input
           id="input"
@@ -410,6 +393,24 @@ const Results = () => {
         >
           Create New Exam
         </small>
+      </div>
+      <div className="input">
+        <Toaster />
+        <select onChange={handleAcademicChange}>
+          <option>select</option>
+          {sortedAcademicYears?.map((academicyear) => (
+            <option value={academicyear}>{academicyear}</option>
+          ))}
+        </select>
+        <select onChange={handleYearChange}>
+          <option>select</option>
+          {sortedYears?.map((year) => (
+            <option value={year}>{year}</option>
+          ))}
+        </select>
+        <button className="bg-white p-1 rounded-sm">
+          <Link to="/promote">Promote Students</Link>
+        </button>
       </div>
       <div className="Table">
         <table className="table-auto ">
