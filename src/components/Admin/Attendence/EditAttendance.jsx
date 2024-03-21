@@ -3,10 +3,11 @@ import "../Attendence/Attendence.css";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { API } from "../../Student/Student";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 ///select/getTimetableYear
 const EditAttendance = () => {
+  const navigate = useNavigate();
   const [selectYear, setSelectYear] = useState("");
   const [yearValue, setYearValue] = useState([]);
   // const [students, setStudents] = useState([]);
@@ -20,30 +21,30 @@ const EditAttendance = () => {
   // const [acad, setAcad] = useState("");
   const [selectAcademic, setSelectAcademic] = useState("");
   const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
-  // const [attendence, setAttendence] = useState([]);
+  const [attendence, setAttendence] = useState([]);
   const [editAttendance, setEditAttendance] = useState([]);
 
-  // const dayNames = [
-  //   "SUNDAY",
-  //   "MONDAY",
-  //   "TUESDAY",
-  //   "WEDNESDAY",
-  //   "THURSDAY",
-  //   "FRIDAY",
-  //   "SATURDAY",
-  // ];
-  // const [today, setToday] = useState(dayNames[day]);
+  const dayNames = [
+    "SUNDAY",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+  ];
+  const [today, setToday] = useState(dayNames[day]);
   const handleDateChange = (e) => {
     setDate(new Date(e.target.value));
-    // setDay(new Date(e.target.value).getDay());
-    // const day = new Date(e.target.value).getDay();
+    setDay(new Date(e.target.value).getDay());
+    const day = new Date(e.target.value).getDay();
 
-    // setToday(dayNames[day]);
+    setToday(dayNames[day]);
   };
 
-  // useEffect(() => {
-  //   handleAcademicChange();
-  // }, [today]);
+  useEffect(() => {
+    handleAcademicChange();
+  }, [today]);
 
   const getEditAttendance = async () => {
     console.log("values", year, academicyear, date);
@@ -110,36 +111,36 @@ const EditAttendance = () => {
     setAcademicYearValue(response?.data?.academicyears);
   };
 
-  // console.log("predefined", attendence);
+  console.log("predefined", attendence);
 
-  // const handleAttendence = (e) => {
-  //   const subject = e.target.className.split("@");
-  //   const studentId = e.target.id;
+  const handleAttendence = (e) => {
+    const subject = e.target.className.split("@");
+    const studentId = e.target.id;
 
-  //   // Find the student in the attendence array
-  //   const targetStudentIndex = attendence.findIndex(
-  //     (student) => student.studentId === studentId
-  //   );
+    // Find the student in the attendence array
+    const targetStudentIndex = attendence.findIndex(
+      (student) => student.studentId === studentId
+    );
 
-  //   if (targetStudentIndex !== -1) {
-  //     // Find the subject index in the subjects array of the student
-  //     const existingSubjectIndex = attendence[
-  //       targetStudentIndex
-  //     ].subjects.findIndex((subj) => subj.subject === subject[1]);
+    if (targetStudentIndex !== -1) {
+      // Find the subject index in the subjects array of the student
+      const existingSubjectIndex = attendence[
+        targetStudentIndex
+      ].subjects.findIndex((subj) => subj.subject === subject[1]);
 
-  //     if (existingSubjectIndex !== -1) {
-  //       // Toggle the 'present' value for the subject
-  //       attendence[targetStudentIndex].subjects[existingSubjectIndex].present =
-  //         !attendence[targetStudentIndex].subjects[existingSubjectIndex]
-  //           .present;
+      if (existingSubjectIndex !== -1) {
+        // Toggle the 'present' value for the subject
+        attendence[targetStudentIndex].subjects[existingSubjectIndex].present =
+          !attendence[targetStudentIndex].subjects[existingSubjectIndex]
+            .present;
 
-  //       console.log(
-  //         "present value",
-  //         attendence[targetStudentIndex].subjects[existingSubjectIndex].present
-  //       );
-  //     }
-  //   }
-  // };
+        console.log(
+          "present value",
+          attendence[targetStudentIndex].subjects[existingSubjectIndex].present
+        );
+      }
+    }
+  };
 
   //   useEffect(() => {
 
@@ -211,10 +212,16 @@ const EditAttendance = () => {
         });
         if (response.status == 200) {
           toast.success("Attendance Updated Successfully");
+          setTimeout(() => {
+            navigate("/attendance");
+          }, 1000);
         }
       } catch (error) {
         toast.error("Failed to Update Attendance");
         console.log("err", error);
+        setTimeout(() => {
+          navigate("/attendance");
+        }, 1000);
       }
     }
 
@@ -276,8 +283,6 @@ const EditAttendance = () => {
           </thead>
           <tbody>
             <tr>
-              <td></td>
-              <td></td>
               {periods.map((period, index) => (
                 <td>
                   <label
@@ -316,7 +321,7 @@ const EditAttendance = () => {
                   <td>
                     <input
                       type="checkbox"
-                      checked={period.present}
+                      checked={Number(period.present)}
                       id={att?.attendance?.id}
                       onChange={(e) =>
                         handleEditAttendence(

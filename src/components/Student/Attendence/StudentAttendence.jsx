@@ -58,8 +58,8 @@ const StudentAttendence = () => {
           <div className="text-sm">Know month wise</div>
           <div className="selectmonth text-sm">Select month</div>
           <input
-            type="date"
-            className="text-black text-center sm:w-32 md:w-48 mt-1 rounded-sm "
+            type="month"
+            className="text-black text-center w-24 sm:w-32 md:w-48 mt-1 rounded-sm "
             onChange={(e) => setMonth(e.target.value)}
             placeholder="DD-MM-YYYY"
           />

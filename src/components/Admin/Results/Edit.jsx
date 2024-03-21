@@ -61,20 +61,25 @@ const Edit = () => {
   const handleUpdate = (id, propertyname, propertyvalue) => {
     setSubjects(
       subjects?.map((item) =>
-        item.id === id ? { ...item, [propertyname]: propertyvalue } : item
+        item.id === id
+          ? { ...item, [propertyname.trim()]: propertyvalue.trim() }
+          : item
       )
     );
   };
   return (
     <div className=" bg-adminresuls  flex min-h-[90vh] p-2 pt-10 pb-20 flex-col items-center ">
       <div className="text-white mt-1 text-xl">Edit Assessment</div>
-      <div className="flex mt-5 flex-col ">
+      <div className="flex mt-5 flex-col gap-y-1">
         <Toaster />
         <div className="text-white m text-sm">
-          Student Name :{`${state.name}`}
+          <span className=" font-medium text-yellow-400">Student Name</span>
+          &nbsp;&nbsp;: {`${state.name}`}
         </div>
         <div className="text-white mb-5 text-sm">
-          Student Id :{`${state.studentId}`}
+          <span className=" font-medium text-yellow-400">Student Id</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:{" "}
+          {`${state.studentId}`}
         </div>
       </div>
 

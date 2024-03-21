@@ -20,9 +20,32 @@ const Timetable = () => {
 
   const days = Object.keys(timetable);
 
-  const handleChange = (day, period, value) => {
+  // const handleChange = (day, period, value, selectedOption = null) => {
+  //   if (selectedOption != null) {
+  //     const updatedTimetable = { ...timetable };
+
+  //     updatedTimetable[day][period] = value + " " + selectedOption;
+
+  //     setTimetable(updatedTimetable);
+  //   } else {
+  //     const updatedTimetable = { ...timetable };
+  //     updatedTimetable[day][period] = value;
+  //     setTimetable(updatedTimetable);
+  //   }
+  // };
+
+  const handleChange = (day, period, value, selectedOption = null) => {
     const updatedTimetable = { ...timetable };
+    // const trimmedString = value?.replace(/\s+/g, " ");
     updatedTimetable[day][period] = value;
+
+    if (selectedOption !== null) {
+      // Clear previously selected options by splitting the current value by space and taking only the first part
+      const newValue = value?.split("(")[0];
+      // const trimmedString = newValue.replace(/\s+/g, " ");
+      updatedTimetable[day][period] = newValue + selectedOption;
+    }
+
     setTimetable(updatedTimetable);
   };
 
@@ -96,7 +119,7 @@ const Timetable = () => {
           <input
             value={year}
             required
-            onChange={(e) => setYear(e.target.value)}
+            onChange={(e) => setYear(e.target.value.trim())}
             placeholder="Enter MBBS Year"
             className="w-32 placeholder-black/60 rounded-sm ps-1"
           />
@@ -106,7 +129,7 @@ const Timetable = () => {
           <input
             required
             value={academicyear}
-            onChange={(e) => setAcademicyear(e.target.value)}
+            onChange={(e) => setAcademicyear(e.target.value.trim())}
             placeholder="Enter Acad. Year"
             className="w-32 placeholder-black/60 rounded-sm ps-1"
           />
@@ -117,9 +140,13 @@ const Timetable = () => {
           <thead>
             <tr>
               <th>Day</th>
+
               <th>9am-11am</th>
+
               <th>11am-12noon</th>
+
               <th>12pm-1pm</th>
+
               <th>2pm-4pm</th>
             </tr>
           </thead>
@@ -137,14 +164,37 @@ const Timetable = () => {
                 </td>
                 {timetable[day].map((activity, index) => (
                   <td>
-                    <input
-                      key={index}
-                      className="w-full text-xs py-1  text-center"
-                      type="text"
-                      placeholder="Enter Subject"
-                      value={activity}
-                      onChange={(e) => handleChange(day, index, e.target.value)}
-                    />
+                    <div className="flex flex-row">
+                      <div style={{ marginRight: "5px" }}>
+                        <input
+                          key={index}
+                          className="w-full text-xs min-w-36 py-1 text-center"
+                          type="text"
+                          placeholder="Enter Subject"
+                          value={activity}
+                          onChange={(e) =>
+                            handleChange(day, index, e.target.value)
+                          }
+                        />
+                      </div>
+                      <div>
+                        <select
+                          style={{ width: "80px" }}
+                          onChange={(e) => {
+                            handleChange(
+                              day,
+                              index,
+                              timetable[day][index],
+                              e.target.value
+                            );
+                          }}
+                        >
+                          <option value="(Select)">Select</option>
+                          <option value="(T)">Theory</option>
+                          <option value="(P)">Practical</option>
+                        </select>
+                      </div>
+                    </div>
                   </td>
                 ))}
               </tr>

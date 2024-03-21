@@ -55,7 +55,7 @@ Datewise table
 
 /* monthwise */
 .monthwisepage {
-  @apply bg-studentmonthpurple min-h-[50vh] pt-5  mx-1 mb-1;
+  @apply bg-studentmonthpurple min-h-[70vh] pt-5  mx-1 mb-1;
 }
 .monthwisepage .Table {
   @apply flex  flex-col items-center mt-1;

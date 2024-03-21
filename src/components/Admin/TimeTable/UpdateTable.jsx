@@ -16,9 +16,18 @@ const dayOrderMap = {
 };
 
 const Periods = ({ periods, onUpdate }) => {
-  const handleChange = (e, index) => {
+  const handleChange = (e, index, selectedOption = null) => {
     const updatedPeriods = [...periods];
-    updatedPeriods[index].subject = e.target.value;
+
+    if (selectedOption !== null && e == null) {
+      const newValue = updatedPeriods[index].subject?.split("(")[0];
+      console.log("index", updatedPeriods[index], "ind", index);
+      updatedPeriods[index].subject = newValue + selectedOption;
+    } else {
+      console.log("index 1", updatedPeriods[index], "ind", index);
+      updatedPeriods[index].subject = e;
+    }
+
     onUpdate(updatedPeriods);
   };
 
@@ -26,12 +35,28 @@ const Periods = ({ periods, onUpdate }) => {
     <>
       {periods?.map((period, index) => (
         <td key={index}>
-          <input
-            className="w-full sm:text-xs sm:py-1  text-center"
-            type="text"
-            value={period.subject}
-            onChange={(e) => handleChange(e, index)}
-          />
+          <div className="flex flex-row">
+            <div>
+              <input
+                className="w-full sm:text-xs sm:py-1 min-w-36 text-center"
+                type="text"
+                value={period.subject}
+                onChange={(e) => handleChange(e.target.value, index)}
+              />
+            </div>
+            <div>
+              <select
+                style={{ width: "80px" }}
+                onChange={(e) => {
+                  handleChange(null, index, e.target.value);
+                }}
+              >
+                <option value="(Select)">Select</option>
+                <option value="(T)">Theory</option>
+                <option value="(P)">Practical</option>
+              </select>
+            </div>
+          </div>
         </td>
       ))}
     </>

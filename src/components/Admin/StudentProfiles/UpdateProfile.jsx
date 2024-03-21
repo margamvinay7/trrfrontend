@@ -37,7 +37,7 @@ const UpdateProfile = () => {
 
     setStudent((prevStudent) => ({
       ...prevStudent,
-      [name]: value,
+      [name]: value.trim(),
     }));
   };
 

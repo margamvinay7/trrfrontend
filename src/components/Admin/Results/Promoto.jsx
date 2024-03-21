@@ -243,13 +243,13 @@ const Promoto = () => {
         <input
           value={year}
           className="p-1  bg-adminprofileblue1 placeholder-black rounded-md "
-          onChange={(e) => setYear(e.target.value)}
+          onChange={(e) => setYear(e.target.value.trim())}
           placeholder="Enter Year To Promote"
         />
         <input
           value={academicyear}
           className="p-1 bg-adminprofileblue1 placeholder-black rounded-md "
-          onChange={(e) => setAcademicyear(e.target.value)}
+          onChange={(e) => setAcademicyear(e.target.value.trim())}
           placeholder="Enter Academicyear To Promote"
         />
         <button

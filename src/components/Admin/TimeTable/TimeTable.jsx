@@ -193,44 +193,7 @@ const TimeTable = () => {
             <option value={year}>{year}</option>
           ))}
         </select>
-        <div className="popup-container ">
-          <button onClick={handleButtonClick} style={{ width: 100 }}>
-            Delete
-          </button>
-          {isOpen && (
-            <div>
-              <div className="popup ">
-                <p className="text-black mt-4">
-                  Are you sure you want to delete?
-                </p>
-                <div className="flex justify-between  mt-8 pop">
-                  <button
-                    onClick={handleCancel}
-                    style={{
-                      backgroundColor: "rgb(209, 213, 219)",
-                      color: "black",
-                      width: 100,
-                      padding: 4,
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => handleDelete(id)}
-                    style={{
-                      backgroundColor: "rgba(189, 68, 46, 1)",
-                      color: "white",
-                      width: 100,
-                      padding: 4,
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+
         <button>
           <Link to="/createNew">Create New</Link>
         </button>
@@ -266,6 +229,46 @@ const TimeTable = () => {
         >
           <button>Edit</button>
         </Link>
+        <div className="popup-container ">
+          <button onClick={handleButtonClick}>Delete</button>
+          {isOpen && (
+            <div className="popup-overlay">
+              <div className="popup ">
+                <p className="text-black mt-4">
+                  <span>Are you sure you want to delete?</span>
+                  <div className="  mt-1">
+                    Note: Deleting this table, you will lose the recorded data
+                    for the attendace
+                  </div>
+                </p>
+                <div className="flex justify-between  mt-4 pop">
+                  <button
+                    onClick={handleCancel}
+                    style={{
+                      backgroundColor: "rgb(209, 213, 219)",
+                      color: "black",
+                      width: 100,
+                      padding: 4,
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDelete(id)}
+                    style={{
+                      backgroundColor: "rgba(189, 68, 46, 1)",
+                      color: "white",
+                      width: 100,
+                      padding: 4,
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

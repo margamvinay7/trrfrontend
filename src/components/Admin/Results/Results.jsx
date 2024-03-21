@@ -345,7 +345,13 @@ const Results = () => {
   };
 
   // for storting of assessments
-  const sortOrder = ["1st", "2nd", "3rd", "4th", "5th"];
+  const sortOrder = [
+    "I-Internal Assessment",
+    "II-Internal Assessment",
+    "III-Internal Assessment",
+    "Prefinal Assessment",
+    "Final Assessment",
+  ];
 
   const customSort = (a, b) => {
     const orderA = sortOrder.indexOf(a.name);
@@ -353,15 +359,7 @@ const Results = () => {
     return orderA - orderB;
   };
 
-  const data = [
-    { name: "2nd", assessment: "ass1" },
-    { name: "1st", assessment: "ass1" },
-    { name: "5th", assessment: "ass1" },
-    { name: "4th", assessment: "ass1" },
-    { name: "3rd", assessment: "ass1" },
-  ];
-
-  const sortedData = [...data].sort(customSort);
+  const sortedData = assessments.sort(customSort);
 
   console.log(sortedData);
 
@@ -380,7 +378,7 @@ const Results = () => {
           id="input"
           type="text"
           placeholder="Type Exam Name"
-          onChange={(e) => setNewexam(e.target.value)}
+          onChange={(e) => setNewexam(e.target.value.trim())}
           value={newexam}
           className=" placeholder-black px-1 text-sm bg-adminlightblue"
         />
@@ -424,7 +422,7 @@ const Results = () => {
             </tr>
           </thead>
           <tbody className="resultsTable">
-            {assessments?.map((assessment) => (
+            {sortedData?.map((assessment) => (
               <tr>
                 <td className="left-align">{assessment.name}</td>
                 <td>

@@ -46,6 +46,22 @@ const StudentResults = () => {
     console.log("assess res", response?.data);
   };
 
+  const sortOrder = [
+    "I-Internal Assessment",
+    "II-Internal Assessment",
+    "III-Internal Assessment",
+    "Prefinal Assessment",
+    "Final Assessment",
+  ];
+
+  const customSort = (a, b) => {
+    const orderA = sortOrder.indexOf(a.assessment);
+    const orderB = sortOrder.indexOf(b.assessment);
+    return orderA - orderB;
+  };
+
+  const sortedData = assessments.sort(customSort);
+
   useEffect(() => {
     if (year) {
       setSelectYear(year);
@@ -71,7 +87,7 @@ const StudentResults = () => {
           <h4>Select Exam</h4>
           <select value={selectAssessment} onChange={handleAssessmentChange}>
             <option>Select Exam</option>
-            {assessments?.map((assessment) => (
+            {sortedData?.map((assessment) => (
               <option value={assessment?.assessment}>
                 {assessment.assessment}
               </option>

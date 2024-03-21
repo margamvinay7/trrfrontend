@@ -11,9 +11,9 @@ const Attendence = () => {
   const [yearValue, setYearValue] = useState([]);
   const [students, setStudents] = useState([]);
   const [timetable, setTimetable] = useState([]);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [periods, setPeriods] = useState([]);
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState(new Date());
   const [day, setDay] = useState(new Date().getDay());
   const [academicyear, setAcademicyear] = useState("");
   const [academicyearValue, setAcademicYearValue] = useState([]);
@@ -39,6 +39,10 @@ const Attendence = () => {
 
     setToday(dayNames[day]);
   };
+
+  useEffect(() => {
+    handleAcademicChange();
+  }, [date, setDate]);
 
   useEffect(() => {
     handleAcademicChange();
@@ -81,7 +85,7 @@ const Attendence = () => {
           // console.log("it is response ac", academicyear, year);
         })
         .then(async () => {
-          if (year && academicyear) {
+          if (year && academicyear && date !== null) {
             const students = await API.get(
               `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
             );
@@ -150,7 +154,7 @@ const Attendence = () => {
           // console.log("it is response", academicyear, year);
         })
         .then(async () => {
-          if (year && academicyear) {
+          if (year && academicyear && date !== null) {
             const students = await API.get(
               `/student/getStudentByYearAndAcademicYear?year=${year}&academicyear=${academicyear}`
             );
@@ -338,7 +342,7 @@ const Attendence = () => {
     updatedSelectedCheckboxes[time] = isChecked;
     setSelectedCheckboxes(updatedSelectedCheckboxes);
 
-    const updatedAttendance = attendence.map((student) => ({
+    const updatedAttendance = attendence?.map((student) => ({
       ...student,
       subjects: student?.subjects?.map((subject) => {
         if (subject.time === time) {
@@ -439,7 +443,7 @@ const Attendence = () => {
             <tr>
               <td></td>
               <td></td>
-              {periods.map((period, index) => (
+              {periods?.map((period, index) => (
                 <td>
                   <label
                     htmlFor={`select${index}`}
@@ -477,9 +481,9 @@ const Attendence = () => {
                   <td>
                     <input
                       type="checkbox"
-                      checked={period.present}
-                      className={`${period.time}@${period.subject}`}
-                      id={att.studentId}
+                      checked={period?.present}
+                      className={`${period?.time}@${period?.subject}`}
+                      id={att?.studentId}
                       onClick={(e) => handleIndividualSelect(e)}
                     />
                   </td>

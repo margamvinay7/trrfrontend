@@ -45,6 +45,18 @@ const Profile = () => {
     });
     console.log("rer", response);
   };
+
+  const sortOrder = ["MBBS-I", "MBBS-II", "MBBS-III", "MBBS-IV"];
+
+  const customSort = (a, b) => {
+    const orderA = sortOrder.indexOf(a.year);
+    const orderB = sortOrder.indexOf(b.year);
+    return orderA - orderB;
+  };
+
+  const sortedResults = results.sort(customSort);
+  const sortedAttendance = attendence.sort(customSort);
+
   useEffect(() => {
     // if (student.id) {
     //   console.log("studentid", student.id);
@@ -116,7 +128,7 @@ const Profile = () => {
             </tr>
           </thead>
           <tbody>
-            {results?.map((result) => (
+            {sortedResults?.map((result) => (
               <>
                 <tr>
                   <td style={{ textAlign: "left", paddingLeft: "20px" }}>
@@ -133,7 +145,7 @@ const Profile = () => {
         </table>
         {status == "Fail" && (
           <div className="text-white mt-1 text-sm ms-5 sm:ms-0">
-            Parents are advices to contact Deans as your child as failed
+            Parents are advices to contact Dean as your child as failed
           </div>
         )}
       </div>
@@ -149,7 +161,7 @@ const Profile = () => {
             </tr>
           </thead>
           <tbody>
-            {attendence?.map((attendence, index) => (
+            {sortedAttendance?.map((attendence, index) => (
               <tr>
                 <td style={{ textAlign: "left", paddingLeft: "20px" }}>
                   {attendence.year}
@@ -179,7 +191,7 @@ const Profile = () => {
         </table>
         {per == "ok" && (
           <div className="text-white mt-1 text-sm ms-5 sm:ms-0">
-            Parents are advices to contact Deans as your child as Insufficient
+            Parents are advices to contact Dean as your child as Insufficient
             attendance
           </div>
         )}
