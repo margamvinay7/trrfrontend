@@ -30,18 +30,13 @@ const Edit = () => {
       if (response.status == 200) {
         toast.success("Assessment Edited");
         console.log("File uploaded successfully");
-        setTimeout(() => {
-          navigate("/results");
-        }, 1000);
+        getAssessment();
       } else {
         console.error("Failed to upload file");
       }
     } catch (error) {
       toast.error("Failed to upload file");
       console.error("Error:", error);
-      setTimeout(() => {
-        navigate("/results");
-      }, 1000);
     }
     // const response = await axios
     // .patch(`/result/updateAssessment/${id}`, {

@@ -182,6 +182,7 @@ const Results = () => {
 
   const handleChangeName = (assessment) => {
     console.log(assessment);
+
     setEditedName(assessment.name);
     setCurrentAssessment(assessment);
     if (currentAssessment) {
@@ -226,7 +227,16 @@ const Results = () => {
           uploaded();
         }
       } catch (error) {
-        toast.error("");
+        const updatedAssessments = assessments.map((assessment) => {
+          if (assessment.name === editedName) {
+            return { ...assessment, name: newexam };
+          }
+          return assessment;
+        });
+
+        setAssessments(updatedAssessments);
+        setNewexam("");
+        toast.success("Assessment Name Updated Locally");
       }
     } else {
       assessments.forEach((assessment) => {
@@ -253,6 +263,46 @@ const Results = () => {
   // useEffect(() => {
   //   handleAddExam();
   // }, [setAssessments]);
+
+  // const handleUpdateName = async () => {
+  //   if (currentAssessment) {
+  //     const year = selectYear;
+  //     const academicyear = selectAcademic;
+
+  //     try {
+  //       if (year && academicyear) {
+  //         // Update assessment name in the database
+  //         const response = await API.post("/result/updateAssessmentName", {
+  //           year: year,
+  //           academicyear: academicyear,
+  //           assessment: currentAssessment.assessment,
+  //           newName: newexam,
+  //         });
+
+  //         if (response.status === 200) {
+  //           toast.success("Assessment Name Updated");
+  //           setNewexam("");
+  //           uploaded();
+  //         }
+  //       } else {
+  //         // If year and academic year are not present, simply update locally
+  //         const updatedAssessments = assessments.map((assessment) => {
+  //           if (assessment.name === editedName) {
+  //             return { ...assessment, name: newexam };
+  //           }
+  //           return assessment;
+  //         });
+
+  //         setAssessments(updatedAssessments);
+  //         setNewexam("");
+  //         toast.success("Assessment Name Updated Locally");
+  //       }
+  //     } catch (error) {
+  //       toast.error("Failed to update assessment name");
+  //       console.error("Error:", error);
+  //     }
+  //   }
+  // };
 
   const handleSelectClick = () => {
     // Clear the file input when the "select" button is clicked

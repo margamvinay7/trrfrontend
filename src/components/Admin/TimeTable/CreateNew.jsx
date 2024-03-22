@@ -68,7 +68,12 @@ const Timetable = () => {
 
     try {
       let response;
-      if (year !== null && academicyear !== null) {
+      if (
+        year?.trim().length !== 0 &&
+        academicyear?.trim().length !== 0 &&
+        academicyear !== null &&
+        year !== null
+      ) {
         response = await API.post("/timetable/createTimetable/", {
           year: year,
           academicyear: academicyear,
@@ -92,9 +97,6 @@ const Timetable = () => {
     } catch (error) {
       toast.error(`${error}`);
       console.error("Error:", error);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
     }
     // try {
     //   const response = await axios.post("http://localhost:5000/timetable", {

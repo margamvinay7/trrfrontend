@@ -146,18 +146,19 @@ const TimeTable = () => {
         if (response.status == 200) {
           toast.success("Table Deleted successfully");
           console.log("File uploaded successfully");
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          setAcademicYearValue([]);
+          setYearValue([]);
+          setSelectAcademic(null);
+          setSelectYear(null);
+          setTimetable([]);
+          setYear("");
+          getSelect();
         } else {
           console.error("Failed to upload file");
         }
       } catch (error) {
         toast.error("Failed to Delete");
         console.error("Error:", error);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
       }
       console.log("Item deleted!");
       setIsOpen(false);

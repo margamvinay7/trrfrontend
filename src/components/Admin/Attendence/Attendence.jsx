@@ -42,6 +42,7 @@ const Attendence = () => {
 
   useEffect(() => {
     handleAcademicChange();
+    setSelectedCheckboxes({});
   }, [date, setDate]);
 
   useEffect(() => {
@@ -283,25 +284,30 @@ const Attendence = () => {
       console.log("res", response);
       if (response.status == 208) {
         toast.error("Attendence Already Marked");
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
+        setSelectedCheckboxes({});
+        handleAcademicChange();
       }
       if (response.status == 200) {
         toast.success("Attendence Saved");
         console.log("File uploaded successfully");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        setAcademicYearValue([]);
+        setYearValue([]);
+        setSelectAcademic("");
+        setSelectYear("");
+        setTimetable([]);
+        setPeriods([]);
+        setStudents([]);
+        setAttendence([]);
+        const dateField = document.getElementById("dateField");
+        dateField.value = "";
+        setDate("");
+        getSelect();
       } else {
         console.error("Failed to Save Attendence");
       }
     } catch (error) {
       toast.error("Failed to Save Attendence");
       console.error("Error:", error);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     }
     // await API
     //   .post("/attendence", attendence)
@@ -408,7 +414,12 @@ const Attendence = () => {
             <option value={year}>{year}</option>
           ))}
         </select>
-        <input type="date" required onChange={handleDateChange} />
+        <input
+          type="date"
+          id="dateField"
+          required
+          onChange={handleDateChange}
+        />
       </div>
       <div className="Table table-container">
         <table className="table-auto scroll-table">

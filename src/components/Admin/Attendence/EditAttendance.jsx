@@ -36,15 +36,15 @@ const EditAttendance = () => {
   const [today, setToday] = useState(dayNames[day]);
   const handleDateChange = (e) => {
     setDate(new Date(e.target.value));
-    setDay(new Date(e.target.value).getDay());
-    const day = new Date(e.target.value).getDay();
+    // setDay(new Date(e.target.value).getDay());
+    // const day = new Date(e.target.value).getDay();
 
     setToday(dayNames[day]);
   };
 
-  useEffect(() => {
-    handleAcademicChange();
-  }, [today]);
+  // useEffect(() => {
+  //   handleAcademicChange();
+  // }, [today]);
 
   const getEditAttendance = async () => {
     console.log("values", year, academicyear, date);
@@ -62,35 +62,18 @@ const EditAttendance = () => {
     } catch (error) {}
   };
 
-  const handleAcademicChange = async (e = null) => {
-    let currentPeriods = null;
-    let currentStudents = null;
-    const year = selectYear;
-    let academicyear;
-    if (e == null) {
-      academicyear = selectAcademic;
-    } else {
-      academicyear = e.target.value;
-      setAcademicyear(academicyear);
-      setSelectAcademic(academicyear);
-    }
+  const handleAcademicChange = async (e) => {
+    const academicyear = e.target.value;
+    setAcademicyear(academicyear);
+    setSelectAcademic(academicyear);
   };
 
   // var attendence = [];
 
-  const handleYearChange = async (e = null) => {
-    let currentPeriods = null;
-    let currentStudents = null;
-    let year;
-    if (e == null) {
-      year = selectYear;
-    } else {
-      setSelectYear(e.target.value);
-      year = e.target.value;
-      setYear(year);
-    }
-
-    const academicyear = selectAcademic;
+  const handleYearChange = async (e) => {
+    setSelectYear(e.target.value);
+    const year = e.target.value;
+    setYear(year);
   };
 
   useEffect(() => {
@@ -99,7 +82,7 @@ const EditAttendance = () => {
 
       getEditAttendance();
     }
-  }, [date]);
+  }, [date, year, academicyear]);
   const getSelect = async () => {
     const response = await API.get(
       "/timetable/getTimetableYearAndAcademicyear"
@@ -110,8 +93,6 @@ const EditAttendance = () => {
     // setAcademicYearValue(["2019-2020", "2021-2022", "2018-2019", "2020-2021"]);
     setAcademicYearValue(response?.data?.academicyears);
   };
-
-  console.log("predefined", attendence);
 
   const handleAttendence = (e) => {
     const subject = e.target.className.split("@");
@@ -212,30 +193,23 @@ const EditAttendance = () => {
         });
         if (response.status == 200) {
           toast.success("Attendance Updated Successfully");
-          setTimeout(() => {
-            navigate("/attendance");
-          }, 1000);
+          getEditAttendance();
         }
       } catch (error) {
         toast.error("Failed to Update Attendance");
         console.log("err", error);
-        setTimeout(() => {
-          navigate("/attendance");
-        }, 1000);
       }
     }
-
-    console.log("edit att", data);
   };
-
-  console.log("at", editAttendance);
 
   useEffect(() => {
     getSelect();
   }, []);
   return (
     <div className=" bg-adminAttendence attendence min-h-[90vh] pb-20 containerattendence min-w-[80%] flex  mx-1 flex-col items-center pt-7">
-      <h1 className="mb-3 text-xl font-medium text-adminyellow">Attendence</h1>
+      <h1 className="mb-3 text-xl font-medium text-adminyellow">
+        Edit Attendence
+      </h1>
       <div className="input">
         <Toaster />
         <select onChange={handleAcademicChange}>
