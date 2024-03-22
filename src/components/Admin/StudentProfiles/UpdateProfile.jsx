@@ -75,18 +75,13 @@ const UpdateProfile = () => {
         console.log("re", response);
         toast.success("Student updated successfully!");
         console.log("Student updated successfully!");
-        setTimeout(() => {
-          navigate("/profiles");
-        }, 1000);
+        getStudent();
       } else if (response.status == 204) {
         toast.error("Image must be lessthan 500X500");
       }
     } catch (error) {
       toast.error("Failed to Update Student");
       console.error("Error updating student:", error);
-      setTimeout(() => {
-        navigate("/profiles");
-      }, 1000);
     }
   };
 
@@ -257,7 +252,7 @@ const UpdateProfile = () => {
 
           <button
             type="submit"
-            className=" w-48 ms-44 bg-adminprofileblue1 hover:bg-sky-400 p-1 rounded-sm"
+            className=" w-48 ms-32 bg-adminprofileblue1 hover:bg-sky-400 p-1 rounded-sm"
           >
             Update Profile
           </button>

@@ -36,7 +36,7 @@ const Periods = ({ periods, onUpdate }) => {
       {periods?.map((period, index) => (
         <td key={index}>
           <div className="flex flex-row">
-            <div>
+            <div style={{ marginRight: "5px" }}>
               <input
                 className="w-full sm:text-xs sm:py-1 min-w-36 text-center"
                 type="text"
@@ -126,18 +126,13 @@ const UpdateTable = () => {
       if (response.status == 200) {
         toast.success("Table Edited successfully");
         console.log("File uploaded successfully");
-        setTimeout(() => {
-          navigate("/timetable");
-        }, 1000);
+        handleGetTimetable();
       } else {
         console.error("Failed to upload file");
       }
     } catch (error) {
       toast.error("Failed to upload file");
       console.error("Error:", error);
-      setTimeout(() => {
-        navigate("/timetable");
-      }, 1000);
     }
     // try {
     //   await axios

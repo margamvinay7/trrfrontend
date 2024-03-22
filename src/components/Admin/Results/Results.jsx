@@ -58,16 +58,16 @@ const Results = () => {
     console.log(e.target.value);
   };
 
-  // const uploaded = async () => {
-  //   const year = selectYear;
-  //   const academicyear = selectAcademic;
+  const uploaded = async () => {
+    const year = selectYear;
+    const academicyear = selectAcademic;
 
-  //   const response = await API.get(
-  //     `/result/getAssessments?year=${year}&academicyear=${academicyear}`
-  //   );
-  //   setAssessments(response?.data);
-  //   console.log(response?.data);
-  // };
+    const response = await API.get(
+      `/result/getAssessments?year=${year}&academicyear=${academicyear}`
+    );
+    setAssessments(response?.data);
+    console.log(response?.data);
+  };
 
   const getSelect = async () => {
     const response = await API.get("/result/getAssessmentyearAndAcademicyear");
@@ -77,46 +77,6 @@ const Results = () => {
     // setSelectYear(response?.data?.years);
     console.log("response", response?.data?.years);
   };
-
-  // const handleAddExam = (nameChange = null) => {
-  //   if (nameChange !== null) {
-  //     console.log("here");
-  //     const newass = assessments.forEach((assessment) => {
-  //       if (assessment.name !== editedName) {
-  //         return assessment;
-  //       }
-  //     });
-  //     if (newass?.length > 1) {
-  //       assessments.forEach((assessment) => {
-  //         if (assessment.name == editedName) {
-  //           setAssessments([
-  //             ...newass,
-  //             { name: newexam, assessment: "assessment" },
-  //           ]);
-  //         }
-  //       });
-  //     } else if (newass?.length == 1) {
-  //       assessments.forEach((assessment) => {
-  //         if (assessment.name == editedName) {
-  //           setAssessments([{ name: newexam, assessment: "assessment" }]);
-  //         }
-  //       });
-  //     }
-  //   } else {?
-  //   if (assessments.length == 0) {
-  //     console.log("here2");
-  //     setAssessments([{ name: newexam, assessment: "assessment" }]);
-  //   } else {
-  //     setAssessments([
-  //       ...assessments,
-  //       { name: newexam, assessment: "assessment" },
-  //     ]);
-
-  //     setCurrent(newexam);
-  //     setNewexam("");
-  //   }
-  // }
-  // };
 
   const sortMBBSValues = (a, b) => {
     // Extract the alphabetic part from the strings
@@ -148,32 +108,36 @@ const Results = () => {
 
   const handleAddExam = (e, nameChange = null) => {
     console.log("c", nameChange);
-    if (nameChange !== null) {
-      console.log("here");
-      const updatedAssessments = assessments.map((assessment) => {
-        if (assessment.name === editedName) {
-          return { ...assessment, name: newexam };
+    if (newexam?.length !== 0) {
+      if (nameChange !== null) {
+        console.log("here");
+        const updatedAssessments = assessments.map((assessment) => {
+          if (assessment.name === editedName) {
+            return { ...assessment, name: newexam };
+          }
+          return assessment;
+        });
+        setAssessments(updatedAssessments);
+        setNewexam("");
+      } else {
+        const existingIndex = assessments.findIndex(
+          (assessment) => assessment.name === newexam
+        );
+        if (existingIndex !== -1) {
+          // Assessment already exists, don't add it again
+          console.log("Assessment already exists");
+          return;
         }
-        return assessment;
-      });
-      setAssessments(updatedAssessments);
-      setNewexam("");
-    } else {
-      const existingIndex = assessments.findIndex(
-        (assessment) => assessment.name === newexam
-      );
-      if (existingIndex !== -1) {
-        // Assessment already exists, don't add it again
-        console.log("Assessment already exists");
-        return;
+        // Add new assessment
+        setAssessments([
+          ...assessments,
+          { name: newexam, assessment: "assessment" },
+        ]);
+        setCurrent(newexam);
+        setNewexam("");
       }
-      // Add new assessment
-      setAssessments([
-        ...assessments,
-        { name: newexam, assessment: "assessment" },
-      ]);
-      setCurrent(newexam);
-      setNewexam("");
+    } else {
+      toast.error("Enter Exam Name");
     }
   };
 
@@ -191,23 +155,15 @@ const Results = () => {
         if (response.status == 200) {
           toast.success("File uploaded successfully");
           console.log("File uploaded successfully");
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          setFile(null);
+          e.target.reset();
         } else {
           toast.error("Failed to upload file");
-
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
         }
       }
     } catch (error) {
       toast.error("Failed to upload file");
       console.error("Error:", error);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     }
   };
 
@@ -266,19 +222,11 @@ const Results = () => {
         });
         if (response.status == 200) {
           toast.success("Assessment Name Updated");
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          setNewexam("");
+          uploaded();
         }
       } catch (error) {
-        toast.error(error.message);
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
+        toast.error("");
       }
     } else {
       assessments.forEach((assessment) => {
@@ -328,19 +276,11 @@ const Results = () => {
       });
       if (response.status == 200) {
         toast.success("Assessment Deleted");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        uploaded();
       } else {
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
       }
     } catch (error) {
       toast.error(error.message);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     }
   };
 
@@ -359,7 +299,7 @@ const Results = () => {
     return orderA - orderB;
   };
 
-  const sortedData = assessments.sort(customSort);
+  const sortedData = assessments?.sort(customSort);
 
   console.log(sortedData);
 
@@ -378,9 +318,9 @@ const Results = () => {
           id="input"
           type="text"
           placeholder="Type Exam Name"
-          onChange={(e) => setNewexam(e.target.value.trim())}
+          onChange={(e) => setNewexam(e.target.value)}
           value={newexam}
-          className=" placeholder-black px-1 text-sm bg-adminlightblue"
+          className=" placeholder-black px-1 text-sm min-w-40 bg-adminlightblue"
         />
         <small
           id="inputbtn"

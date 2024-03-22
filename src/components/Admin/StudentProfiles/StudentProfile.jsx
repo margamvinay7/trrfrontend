@@ -144,18 +144,16 @@ const StudentProfile = () => {
             toast.success("File uploaded successfully");
             console.log("File uploaded successfully", res);
 
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            setFile(null);
+            e.target.reset();
 
-            // getSelect();
+            getSelect();
           } else {
             console.log(res);
             toast.error("Failed to upload file , Check File");
 
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
+            setFile(null);
+            e.target.reset();
             console.error("Failed to upload file");
           }
         });
@@ -163,9 +161,8 @@ const StudentProfile = () => {
     } catch (error) {
       toast.error("Failed to upload file , Check File");
       console.error("Error:", error);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      setFile(null);
+      e.target.reset();
     }
   };
 

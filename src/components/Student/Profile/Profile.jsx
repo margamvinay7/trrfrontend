@@ -17,7 +17,7 @@ const Profile = () => {
       `/result/getResultByYearsAndAcademicYearAndStudentId?studentId=${student.id}&assessment=${assessment}`
     );
     setResults(response?.data);
-    console.log("rea", response);
+
     const set = response?.data?.forEach((item) => {
       if (item.status !== "Passed") {
         setStatus("Fail");
@@ -37,7 +37,10 @@ const Profile = () => {
     const set = filterData.forEach((item) => {
       if (
         Number(
-          (item.totalPresentSubjectsCount / item.totalSubjectsCount) * 100
+          (item.totalTPresentSubjectsCount / item.totalTSubjectsCount) * 100
+        ) < 80 ||
+        Number(
+          (item.totalPPresentSubjectsCount / item.totalPSubjectsCount) * 100
         ) < 75
       ) {
         setPer("ok");
@@ -157,7 +160,8 @@ const Profile = () => {
             <tr>
               <th style={{ textAlign: "left", paddingLeft: "20px" }}>COURSE</th>
               <th>Year</th>
-              <th>Percentage</th>
+              <th>Theory</th>
+              <th>Practical</th>
             </tr>
           </thead>
           <tbody>
@@ -170,8 +174,26 @@ const Profile = () => {
                 <td
                   style={
                     Number(
-                      (attendence.totalPresentSubjectsCount /
-                        attendence.totalSubjectsCount) *
+                      (attendence.totalTPresentSubjectsCount /
+                        attendence.totalTSubjectsCount) *
+                        100
+                    ) < 80
+                      ? { color: "red" }
+                      : {}
+                  }
+                >
+                  {Number(
+                    (attendence.totalTPresentSubjectsCount /
+                      attendence.totalTSubjectsCount) *
+                      100
+                  ).toFixed(2)}
+                  %
+                </td>
+                <td
+                  style={
+                    Number(
+                      (attendence.totalPPresentSubjectsCount /
+                        attendence.totalPSubjectsCount) *
                         100
                     ) < 75
                       ? { color: "red" }
@@ -179,8 +201,8 @@ const Profile = () => {
                   }
                 >
                   {Number(
-                    (attendence.totalPresentSubjectsCount /
-                      attendence.totalSubjectsCount) *
+                    (attendence.totalPPresentSubjectsCount /
+                      attendence.totalPSubjectsCount) *
                       100
                   ).toFixed(2)}
                   %
